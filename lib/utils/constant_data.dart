@@ -27,6 +27,9 @@ class ConstantData {
   static Color clrBorder = const Color(0xffBABABA);
   // static Color mainTextColor = "#084043".toColor();
   static Color textColor = "#4E4E4E".toColor();
+  static Color tileColor = "#E1EBEC".toColor();
+
+  static BorderRadius borderRadius = BorderRadius.circular(20);
 
   static String privacyPolicy = "https://google.com";
 
@@ -47,6 +50,7 @@ class ConstantData {
     final regExp = RegExp(pattern);
     return regExp.hasMatch(value);
   }
+
 
   static TextStyle customTextStyle({
     required double fontSize,

@@ -156,7 +156,10 @@ class UserListScreen extends StatelessWidget {
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (mrType == MRType.EXECUTIVE)
                       ? (_, index) {
-                          return FirmInfoTile(
+                          // return FirmInfoTile(
+                          //   userModel: usersList[index],
+                          // );
+                          return AmanFirmInfoTile(
                             userModel: usersList[index],
                           );
                         }
@@ -368,6 +371,83 @@ class FirmInfoTile extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+//Aman Firm info tile
+class AmanFirmInfoTile extends StatelessWidget {
+  const AmanFirmInfoTile({
+    Key? key,
+    required this.userModel,
+  }) : super(key: key);
+
+  final UserModel userModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<UserMRController>();
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: blockSizeVertical(context: context),
+        // horizontal: blockSizeHorizontal(context: context),
+      ),
+      child: InkWell(
+        onTap: () async {
+          final model = await controller.getUserDetails(model: userModel);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => UserInfoScreen(userModel: model),
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: blockSizeHorizontal(context: context) * 5,
+            vertical: blockSizeVertical(context: context) * 2,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: ConstantData.borderRadius,
+            color: ConstantData.tileColor,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                userModel.phoneNo,
+                style: TextStyle(
+                  color: ConstantData.mainTextColor,
+                  fontSize: font18Px(context: context) * 1.1,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                decoration: BoxDecoration(
+                  borderRadius: ConstantData.borderRadius,
+                  color: ConstantData.primaryColor,
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    if (userModel.status == 'Approved') {
+                    } else {}
+                  },
+                  child: Text(
+                    (userModel.status == 'Approved')
+                        ? "Complete Reg"
+                        : "Get OTP",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: font12Px(context: context) * 1.1,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
