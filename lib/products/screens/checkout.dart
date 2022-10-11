@@ -164,7 +164,7 @@ class _CheckoutItemTileState extends State<CheckoutItemTile> {
                     value: widget.product.productName,
                     fontSize: font15Px(context: context),
                     color: Colors.black,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Padding(

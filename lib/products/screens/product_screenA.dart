@@ -157,8 +157,9 @@ class _ProductScreenAState extends State<ProductScreenA> {
             Flexible(
               child: GridView.builder(
                 physics: const BouncingScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: 1 / 1.8,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: (screenWidth(context: context) / 2.5) /
+                      (screenHeight(context: context) / 3.25),
                   crossAxisCount: 2,
                 ),
                 itemCount: productItem.length,
@@ -191,7 +192,7 @@ class _ProductScreenAState extends State<ProductScreenA> {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: blockSizeHorizontal(context: context) * 2,
-          vertical: blockSizeHorizontal(context: context) * 1.8),
+          vertical: blockSizeHorizontal(context: context) * 3.5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -223,7 +224,7 @@ class _ProductScreenAState extends State<ProductScreenA> {
                     value: items,
                     child: ConstantWidgets().customText(
                       value: items,
-                      fontSize: font18Px(context: context),
+                      fontSize: font12Px(context: context),
                       color: Colors.black,
                       fontWeight: FontWeight.normal,
                     ),
@@ -273,10 +274,10 @@ class ProductTileState extends State<ProductTile> {
             children: [
               ConstantWidgets().customText(
                 value: widget.product.productName,
-                maxLines: 2,
+                maxLines: 1,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
-                fontSize: font18Px(context: context),
+                fontSize: font12Px(context: context) * 1.1,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -298,7 +299,7 @@ class ProductTileState extends State<ProductTile> {
 
   Widget priceText(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -319,10 +320,10 @@ class ProductTileState extends State<ProductTile> {
                     TextSpan(
                       text: widget.product.newMrp,
                       style: TextStyle(
-                        fontSize: font18Px(context: context) * 1.3,
-                        color: ConstantData.primaryColor,
-                        fontFamily: ConstantData.fontFamily,
-                      ),
+                          fontSize: font18Px(context: context) * 1.1,
+                          color: ConstantData.primaryColor,
+                          fontFamily: ConstantData.fontFamily,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -336,7 +337,7 @@ class ProductTileState extends State<ProductTile> {
             ),
             child: ConstantWidgets().customText(
               value: widget.product.oldMrp,
-              fontSize: font12Px(context: context),
+              fontSize: font12Px(context: context) * 0.8,
               color: Colors.grey,
               textDecoration: TextDecoration.lineThrough,
               fontWeight: FontWeight.normal,
@@ -369,7 +370,8 @@ class _CartIconsState extends State<CartIcons> {
     return cart
         ? addIcon(context)
         : CartItemButtons(
-            num: 1,
+          maxQuantity: int.parse(widget.product.quantity),
+            itemquantity: 1,
             trailing: Padding(
               padding: const EdgeInsets.only(left: 3),
               child: InkWell(
@@ -379,7 +381,7 @@ class _CartIconsState extends State<CartIcons> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(1),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.red.withOpacity(0.2),
@@ -409,7 +411,7 @@ class _CartIconsState extends State<CartIcons> {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: blockSizeHorizontal(context: context) * 3,
+              horizontal: blockSizeHorizontal(context: context) * 4,
               vertical: 5),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -417,12 +419,13 @@ class _CartIconsState extends State<CartIcons> {
               Icon(
                 Icons.shopping_cart_outlined,
                 color: Colors.white,
-                size: font18Px(context: context) * 1.3,
+                size: font15Px(context: context) * 1.1,
               ),
+              const SizedBox(width: 3),
               ConstantWidgets().customText(
                 value: "Add",
                 color: Colors.white,
-                fontSize: font18Px(context: context),
+                fontSize: font12Px(context: context) * 1.1,
                 fontWeight: FontWeight.normal,
               ),
             ],

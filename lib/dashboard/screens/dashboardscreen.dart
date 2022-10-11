@@ -191,13 +191,14 @@ class Performace extends StatelessWidget {
               Text(
                 "Performance",
                 style: TextStyle(
-                  fontSize: font18Px(context: context) * 1.1,
-                  fontWeight: FontWeight.w500,
-                ),
+                    fontSize: font18Px(context: context) * 1.1,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: ConstantData.fontFamily),
               ),
               Text(
                 "Data of past 7 days",
                 style: TextStyle(
+                  fontFamily: ConstantData.fontFamily,
                   fontSize: font12Px(context: context),
                 ),
               ),
@@ -226,6 +227,7 @@ class Performace extends StatelessWidget {
             Text(
               type,
               style: TextStyle(
+                fontFamily: ConstantData.fontFamily,
                 fontSize: font15Px(context: context),
               ),
             ),
@@ -297,8 +299,9 @@ class Statictics extends StatelessWidget {
           child: Text(
             "Statistics",
             style: TextStyle(
+              fontFamily: ConstantData.fontFamily,
               fontSize: font18Px(context: context) * 1.1,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -321,6 +324,7 @@ class Statictics extends StatelessWidget {
         Text(
           type,
           style: TextStyle(
+            fontFamily: ConstantData.fontFamily,
             fontSize: font15Px(context: context),
             color: Colors.grey,
           ),
@@ -399,8 +403,9 @@ class MonthlyTarge extends StatelessWidget {
           child: Text(
             "Monthly Target",
             style: TextStyle(
+              fontFamily: ConstantData.fontFamily,
               fontSize: font18Px(context: context) * 1.1,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
@@ -425,7 +430,9 @@ class MonthlyTarge extends StatelessWidget {
               Text(
                 type,
                 style: TextStyle(
-                    fontSize: font18Px(context: context), color: Colors.grey),
+                    fontFamily: ConstantData.fontFamily,
+                    fontSize: font12Px(context: context) * 1.2,
+                    color: Colors.grey),
               ),
               Text(
                 num.toString(),
@@ -440,6 +447,7 @@ class MonthlyTarge extends StatelessWidget {
             center: Text(
               "${percentage.toInt().toString()}%",
               style: TextStyle(
+                fontFamily: ConstantData.fontFamily,
                 fontSize: font12Px(context: context),
               ),
             ),

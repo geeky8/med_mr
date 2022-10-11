@@ -54,7 +54,7 @@ class CartScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ListView.separated(
-                itemCount: cartList.length + 1,
+                itemCount: cartList.length,
                 separatorBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.symmetric(
@@ -65,9 +65,6 @@ class CartScreen extends StatelessWidget {
                   );
                 },
                 itemBuilder: (BuildContext context, int index) {
-                  if (index > cartList.length - 1) {
-                    return addItemsButton(context);
-                  }
                   return CartItemTile(list: cartList, index: index);
                 },
               ),
@@ -84,32 +81,6 @@ class CartScreen extends StatelessWidget {
               text: "Checkout",
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  InkWell addItemsButton(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pop();
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.symmetric(
-              horizontal:
-                  BorderSide(width: 2, color: Colors.grey.withOpacity(0.5))),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(
-            blockSizeHorizontal(context: context) * 4,
-          ),
-          child: ConstantWidgets().customText(
-            value: "Add More Items +",
-            fontSize: font18Px(context: context),
-            color: Colors.grey,
-            fontWeight: FontWeight.normal,
-          ),
         ),
       ),
     );
@@ -148,11 +119,16 @@ class _CartItemTileState extends State<CartItemTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ConstantWidgets().customText(
-                    value: widget.list[widget.index].productName,
-                    fontSize: font15Px(context: context),
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: blockSizeHorizontal(context: context) * 35),
+                    child: ConstantWidgets().customText(
+                      value: widget.list[widget.index].productName,
+                      fontSize: font15Px(context: context),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      maxLines: 2,
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -180,7 +156,8 @@ class _CartItemTileState extends State<CartItemTile> {
                           horizontal: blockSizeHorizontal(context: context) * 3,
                         ),
                         child: CartItemButtons(
-                          num: widget.list[widget.index].cartQuantity!,
+                          maxQuantity: int.parse(widget.list[widget.index].quantity),
+                          itemquantity: widget.list[widget.index].cartQuantity!,
                           callback: (int num) {
                             final temp = widget.list[widget.index];
                             widget.list[widget.index] =

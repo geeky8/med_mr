@@ -6,10 +6,16 @@ import '../../utils/constant_data.dart';
 import '../../utils/size_config.dart';
 
 class CartItemButtons extends StatefulWidget {
-  int num;
+  int itemquantity;
   final Widget? trailing;
-  Function(int n)? callback;
-  CartItemButtons({this.callback, this.trailing, required this.num, Key? key})
+  final int maxQuantity;
+  final Function(int n)? callback;
+  CartItemButtons(
+      {this.callback,
+      this.trailing,
+      required this.itemquantity,
+      required this.maxQuantity,
+      Key? key})
       : super(key: key);
 
   @override
@@ -23,7 +29,7 @@ class _CartItemButtonsState extends State<CartItemButtons> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-          height: 30,
+          height: 25,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             color: ConstantData.primaryColor.withOpacity(0.2),
@@ -31,19 +37,29 @@ class _CartItemButtonsState extends State<CartItemButtons> {
           child: Row(
             children: [
               subtractButton(),
-              InkWell(
-                onTap: () {
-                  TextEditingController controller =
-                      TextEditingController(text: widget.num.toString());
-                  itemCountDialog(context, controller);
-                },
-                child: ConstantWidgets().customText(
-                  value: widget.num >= 1000
-                      ? '${(widget.num ~/ 1000)}k'
-                      : widget.num.toString(),
-                  fontSize: font15Px(context: context),
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: InkWell(
+                  onTap: () {
+                    TextEditingController controller = TextEditingController(
+                        text: widget.itemquantity.toString());
+                    itemCountDialog(context, controller);
+                  },
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 10,
+                    ),
+                    child: Center(
+                      child: ConstantWidgets().customText(
+                        value: widget.itemquantity >= 1000
+                            ? '${(widget.itemquantity ~/ 1000)}k'
+                            : widget.itemquantity.toString(),
+                        fontSize: font15Px(context: context),
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               addButton(),
@@ -61,12 +77,12 @@ class _CartItemButtonsState extends State<CartItemButtons> {
       child: InkWell(
         onTap: () {
           setState(() {
-            if (widget.num - 1 >= 0) widget.num--;
-            if (widget.callback != null) widget.callback!(widget.num);
+            if (widget.itemquantity - 1 >= 0) widget.itemquantity--;
+            if (widget.callback != null) widget.callback!(widget.itemquantity);
           });
         },
         child: Container(
-          padding: const EdgeInsets.all(3),
+          // padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.grey[300],
@@ -86,12 +102,17 @@ class _CartItemButtonsState extends State<CartItemButtons> {
       child: InkWell(
         onTap: () {
           setState(() {
-            widget.num++;
-            if (widget.callback != null) widget.callback!(widget.num);
+            if (widget.itemquantity + 1 <= widget.maxQuantity) {
+              widget.itemquantity++;
+            } else {
+              Fluttertoast.showToast(
+                  msg: "Only ${widget.maxQuantity} items are available");
+            }
+            if (widget.callback != null) widget.callback!(widget.itemquantity);
           });
         },
         child: Container(
-          padding: const EdgeInsets.all(3),
+          // padding: const EdgeInsets.all(3),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: ConstantData.primaryColor,
@@ -137,16 +158,18 @@ class _CartItemButtonsState extends State<CartItemButtons> {
                     ),
                     onPressed: () {
                       int temp = int.parse(controller.text);
-                      if (temp < 1000000) {
+                      if (temp <= widget.maxQuantity) {
                         setState(() {
-                          widget.num = temp;
+                          widget.itemquantity = temp;
                         });
-                        if (widget.callback != null)
-                          widget.callback!(widget.num);
+                        if (widget.callback != null) {
+                          widget.callback!(widget.itemquantity);
+                        }
                         Navigator.of(context).pop();
                       } else {
                         Fluttertoast.showToast(
-                            msg: "Items can't be greater than 1000000");
+                            msg:
+                                "Only ${widget.maxQuantity} items are available");
                       }
                     },
                     child: ConstantWidgets().customText(
