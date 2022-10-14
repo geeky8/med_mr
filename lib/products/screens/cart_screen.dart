@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/models/cart_model.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/checkout.dart';
 import 'package:medrpha_trial/products/utils/bottombtn.dart';
@@ -9,39 +12,12 @@ import 'package:medrpha_trial/utils/wigets.dart';
 
 class CartScreen extends StatelessWidget {
   CartScreen({Key? key}) : super(key: key);
-  List<ProductModel> cartList = [];
+  final ProductController pcontroller = Get.find();
+  late CartModel cart;
 
   @override
   Widget build(BuildContext context) {
-    if (cartList.isEmpty) {
-      for (var i = 0; i < 3; i++) {
-        cartList.add(
-          ProductModel(
-            pid: i.toString(),
-            wpid: i.toString(),
-            priceId: i.toString(),
-            salePrice: "500",
-            productImg: "product.png",
-            productName: "this is my product 200ml nice bottle",
-            category: "Elopathy",
-            company: "company",
-            newMrp: "500",
-            oldMrp: "600",
-            percentDiscount: "40",
-            saleQtyType: "saleQtyType",
-            prodSaleTypeDetails: "prodSaleTypeDetails",
-            quantity: "200",
-            cartQuantity: 5,
-            mrp: "500",
-            subTotal: "subTotal",
-            expiryDate: "expiryDate",
-            description:
-                "this is a nive des of the medicine this ia bery good medicine",
-            totalQtyPrice: "totalQtyPrice",
-          ),
-        );
-      }
-    }
+
     return Scaffold(
       appBar: ConstantWidgets().customAppBar(
         title: "Cart",
@@ -53,28 +29,38 @@ class CartScreen extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: ListView.separated(
-                itemCount: cartList.length,
-                separatorBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: blockSizeHorizontal(context: context) * 4),
-                    child: const Divider(
-                      thickness: 2,
-                    ),
+              child: Obx(() {
+                cart = pcontroller.cartModel.value;
+                if (cart.productList.isEmpty) {
+                  return const Center(
+                    child: Text("Cart is empty"),
                   );
-                },
-                itemBuilder: (BuildContext context, int index) {
-                  return CartItemTile(list: cartList, index: index);
-                },
-              ),
+                }
+                return ListView.separated(
+                  itemCount: pcontroller.cartModel.value.productList.length,
+                  separatorBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal:
+                              blockSizeHorizontal(context: context) * 4),
+                      child: const Divider(
+                        thickness: 2,
+                      ),
+                    );
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    return CartItemTile(
+                      product: pcontroller.cartModel.value.productList[index],
+                    );
+                  },
+                );
+              }),
             ),
             BottomButton(
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) =>
-                        CheckoutScreen(checkoutList: cartList),
+                    builder: (context) => CheckoutScreen(),
                   ),
                 );
               },
@@ -88,30 +74,37 @@ class CartScreen extends StatelessWidget {
 }
 
 class CartItemTile extends StatefulWidget {
-  List<ProductModel> list;
-  final int index;
-  CartItemTile({required this.list, required this.index, Key? key})
-      : super(key: key);
+  final ProductModel product;
+  const CartItemTile({required this.product, Key? key}) : super(key: key);
 
   @override
   State<CartItemTile> createState() => _CartItemTileState();
 }
 
 class _CartItemTileState extends State<CartItemTile> {
+  final ProductController pcontroller = Get.find();
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         IconButton(
-            onPressed: () {}, icon: const Icon(Icons.delete_outline_outlined)),
+            onPressed: () {
+              pcontroller.removeFromCart(
+                  model: widget.product, context: context);
+            },
+            icon: const Icon(Icons.delete_outline_outlined)),
         Row(
           children: [
             Expanded(
               flex: 1,
-              child: Image.asset(
-                "${ConstantData.assetsPath}${widget.list[widget.index].productImg}",
-                fit: BoxFit.cover,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxHeight: blockSizeVertical(context: context) * 10),
+                child: Image.network(
+                  "${ConstantData.productUrl}${widget.product.productImg}",
+                  fit: BoxFit.fitHeight,
+                ),
               ),
             ),
             Expanded(
@@ -123,7 +116,7 @@ class _CartItemTileState extends State<CartItemTile> {
                     padding: EdgeInsets.only(
                         right: blockSizeHorizontal(context: context) * 35),
                     child: ConstantWidgets().customText(
-                      value: widget.list[widget.index].productName,
+                      value: widget.product.productName,
                       fontSize: font15Px(context: context),
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -135,7 +128,7 @@ class _CartItemTileState extends State<CartItemTile> {
                       vertical: blockSizeHorizontal(context: context) * 3,
                     ),
                     child: ConstantWidgets().customText(
-                      value: 'In Stock : ${widget.list[widget.index].quantity}',
+                      value: 'In Stock : ${widget.product.quantity}',
                       fontSize: font15Px(context: context),
                       color: ConstantData.primaryColor,
                       fontWeight: FontWeight.w400,
@@ -146,7 +139,7 @@ class _CartItemTileState extends State<CartItemTile> {
                     children: [
                       ConstantWidgets().customText(
                         value:
-                            "\$${int.parse(widget.list[widget.index].newMrp) * (widget.list[widget.index].cartQuantity!)}",
+                            "Rs ${double.parse(widget.product.newMrp) * (widget.product.cartQuantity!)}",
                         fontSize: font18Px(context: context) * 1.1,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -156,14 +149,22 @@ class _CartItemTileState extends State<CartItemTile> {
                           horizontal: blockSizeHorizontal(context: context) * 3,
                         ),
                         child: CartItemButtons(
-                          maxQuantity: int.parse(widget.list[widget.index].quantity),
-                          itemquantity: widget.list[widget.index].cartQuantity!,
-                          callback: (int num) {
-                            final temp = widget.list[widget.index];
-                            widget.list[widget.index] =
-                                temp.copyWith(cartQuantity: num);
-                            setState(() {});
-                          },
+                          maxQuantity: int.parse(widget.product.quantity),
+                          itemquantity: widget.product.cartQuantity!,
+                          callbackAdd: (() async {
+                            await pcontroller.plusToCart(
+                                model: widget.product, context: context);
+                          }),
+                          callbackSub: (() async {
+                            await pcontroller.minusToCart(
+                                model: widget.product, context: context);
+                          }),
+                          callbackVal: ((int n) async {
+                            await pcontroller.updateCartQunatity(
+                                model: widget.product,
+                                value: n.toString(),
+                                context: context);
+                          }),
                         ),
                       ),
                     ],

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:medrpha_trial/dashboard/screens/dashboardscreen.dart';
+import 'package:medrpha_trial/products/enums/category_type.dart';
 import 'package:medrpha_trial/products/models/category_model.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/cart_screen.dart';
 import 'package:medrpha_trial/products/utils/cartitem_buttons.dart';
-import 'package:medrpha_trial/products/utils/category_list.dart';
 import 'package:medrpha_trial/utils/constant_data.dart';
 import 'package:medrpha_trial/utils/size_config.dart';
 import 'package:medrpha_trial/utils/wigets.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
+
+import '../controller/product_controller.dart';
+import '../enums/home_state.dart';
 
 class ProductScreenA extends StatefulWidget {
-  ProductScreenA({Key? key}) : super(key: key);
+  const ProductScreenA({Key? key}) : super(key: key);
 
   @override
   State<ProductScreenA> createState() => _ProductScreenAState();
@@ -24,57 +23,17 @@ class ProductScreenA extends StatefulWidget {
 
 class _ProductScreenAState extends State<ProductScreenA> {
   // List of items in our dropdown menu
-  late String selectedCategory;
   @override
   void initState() {
-    selectedCategory = categoryList[0];
-    for (var i = 0; i < 11; i++) {
-      productItem.add(ProductModel(
-          pid: i.toString(),
-          wpid: i.toString(),
-          priceId: i.toString(),
-          salePrice: 200.toString(),
-          productImg: "${ConstantData.assetsPath}product.png",
-          productName:
-              "This is my medicine this is pretty good get it for cheap prize",
-          category: "Ethical",
-          company: "Aman",
-          newMrp: "500",
-          oldMrp: "600",
-          percentDiscount: "10",
-          saleQtyType: "250",
-          prodSaleTypeDetails: "prodSaleTypeDetails",
-          quantity: "100",
-          cartQuantity: 0,
-          mrp: "500",
-          subTotal: "900",
-          expiryDate: "expiryDate",
-          description:
-              "this is a des in dont know what to write in here so thsi is iking of a randon string that im writing over here hope u have a good rest of the day or night",
-          totalQtyPrice: "1000"));
-    }
+    categoryList = pcontroller.categoryList;
     super.initState();
   }
 
-  List<ProductModel> productItem = [];
+  final ProductController pcontroller = Get.find();
 
-  var categoryList = [
-    'Ethical',
-    'Generic',
-    'Elopathy',
-    'Expensive',
-    'Cheap',
-  ];
+  late List<ProductModel> productItem;
 
-  List<CategoryModel> list = List<CategoryModel>.generate(
-    7,
-    (index) => CategoryModel(
-      categoryId: 1,
-      categoryName: 'Ethical',
-      categoryImgUrl:
-          'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-    ),
-  );
+  late List<CategoryModel> categoryList;
 
   @override
   Widget build(BuildContext context) {
@@ -114,25 +73,29 @@ class _ProductScreenAState extends State<ProductScreenA> {
                       left: blockSizeHorizontal(context: context) * 3,
                       top: blockSizeHorizontal(context: context),
                     ),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        // alignment: Alignment.center,
-                        padding: EdgeInsets.all(
-                            blockSizeVertical(context: context) / 1.5),
-                        decoration: BoxDecoration(
-                          color: ConstantData.primaryColor,
-                          shape: BoxShape.circle,
+                    child: Obx(() {
+                      return Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          // alignment: Alignment.center,
+                          padding: EdgeInsets.all(
+                              blockSizeVertical(context: context) / 1.5),
+                          decoration: BoxDecoration(
+                            color: ConstantData.primaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: ConstantWidgets().customText(
+                            value: pcontroller
+                                .cartModel.value.productList.length
+                                .toString(),
+                            fontSize: font12Px(context: context),
+                            color: ConstantData.bgColor,
+                            fontWeight: FontWeight.w600,
+                            alignment: TextAlign.center,
+                          ),
                         ),
-                        child: ConstantWidgets().customText(
-                          value: '2',
-                          fontSize: font12Px(context: context),
-                          color: ConstantData.bgColor,
-                          fontWeight: FontWeight.w600,
-                          alignment: TextAlign.center,
-                        ),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -153,35 +116,75 @@ class _ProductScreenAState extends State<ProductScreenA> {
         child: Column(
           children: [
             SeachBar(),
-            dropDownSelection(context),
-            Flexible(
-              child: GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: (screenWidth(context: context) / 2.5) /
-                      (screenHeight(context: context) / 3.25),
-                  crossAxisCount: 2,
-                ),
-                itemCount: productItem.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.all(
-                        blockSizeHorizontal(context: context) * 2),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        boxShadow: kElevationToShadow[2],
-                        color: ConstantData.bgColor,
-                        borderRadius: ConstantData.borderRadius,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: ConstantData.borderRadius,
-                        child: ProductTile(product: productItem[index]),
-                      ),
-                    ),
+            Obx(() {
+              return dropDownSelection(context);
+            }),
+            Obx(() {
+              switch (pcontroller.currCategory.value) {
+                case CategoriesType.ETHICAL:
+                  productItem = pcontroller.ethicalProductList;
+                  break;
+                case CategoriesType.GENERIC:
+                  productItem = pcontroller.genericProductList;
+                  break;
+                case CategoriesType.SURGICAL:
+                  productItem = pcontroller.surgicalProductList;
+                  break;
+                case CategoriesType.VETERINARY:
+                  productItem = pcontroller.veterinaryProductList;
+                  break;
+                case CategoriesType.AYURVEDIC:
+                  productItem = pcontroller.ayurvedicProductList;
+                  break;
+                case CategoriesType.GENERAL:
+                  productItem = pcontroller.generalProductList;
+                  break;
+              }
+              switch (pcontroller.homeState.value) {
+                //switch cases to add list
+
+                case HomeState.LOADING:
+                  return const Expanded(child: Center(child: CircularProgressIndicator()));
+                case HomeState.SUCCESS:
+                  return Flexible(
+                    child: productItem.isEmpty
+                        ? const Center(
+                            child: Text("No items here"),
+                          )
+                        : GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio:
+                                  (screenWidth(context: context) / 2.5) /
+                                      (screenHeight(context: context) / 3.25),
+                              crossAxisCount: 2,
+                            ),
+                            itemCount: productItem.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: EdgeInsets.all(
+                                    blockSizeHorizontal(context: context) * 2),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: kElevationToShadow[2],
+                                    color: ConstantData.bgColor,
+                                    borderRadius: ConstantData.borderRadius,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: ConstantData.borderRadius,
+                                    child: ProductTile(
+                                      product: productItem[index],
+                                      pcontroller: pcontroller,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                   );
-                },
-              ),
-            ),
+              }
+            }),
           ],
         ),
       ),
@@ -197,7 +200,7 @@ class _ProductScreenAState extends State<ProductScreenA> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ConstantWidgets().customText(
-            value: selectedCategory,
+            value: pcontroller.currCategory.value.categoryString(),
             fontSize: font18Px(context: context) * 1.2,
             color: Colors.black,
             fontWeight: FontWeight.w600,
@@ -214,16 +217,16 @@ class _ProductScreenAState extends State<ProductScreenA> {
                 isDense: true,
                 elevation: 2,
                 borderRadius: BorderRadius.circular(12),
-                value: selectedCategory,
+                value: pcontroller.currCategory.value.categoryString(),
                 icon: Icon(
                   Icons.keyboard_arrow_down,
                   color: ConstantData.secondaryColor,
                 ),
-                items: categoryList.map((String items) {
+                items: categoryList.map((CategoryModel items) {
                   return DropdownMenuItem(
-                    value: items,
+                    value: items.categoryName,
                     child: ConstantWidgets().customText(
-                      value: items,
+                      value: items.categoryName,
                       fontSize: font12Px(context: context),
                       color: Colors.black,
                       fontWeight: FontWeight.normal,
@@ -233,9 +236,7 @@ class _ProductScreenAState extends State<ProductScreenA> {
                 // After selecting the desired option,it will
                 // change button value to selected value
                 onChanged: (String? newValue) {
-                  setState(() {
-                    selectedCategory = newValue!;
-                  });
+                  pcontroller.setCurrCategory(newValue!);
                 },
               ),
             ),
@@ -246,15 +247,12 @@ class _ProductScreenAState extends State<ProductScreenA> {
   }
 }
 
-class ProductTile extends StatefulWidget {
+class ProductTile extends StatelessWidget {
   final ProductModel product;
-  const ProductTile({required this.product, Key? key}) : super(key: key);
-
-  @override
-  State<ProductTile> createState() => ProductTileState();
-}
-
-class ProductTileState extends State<ProductTile> {
+  final ProductController pcontroller;
+  const ProductTile(
+      {required this.product, required this.pcontroller, Key? key})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -262,8 +260,8 @@ class ProductTileState extends State<ProductTile> {
       children: [
         //Image
         Expanded(
-          child: Image.asset(
-            widget.product.productImg,
+          child: Image.network(
+            ConstantData.productUrl + product.productImg,
             fit: BoxFit.cover,
           ),
         ),
@@ -273,7 +271,7 @@ class ProductTileState extends State<ProductTile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ConstantWidgets().customText(
-                value: widget.product.productName,
+                value: product.productName,
                 maxLines: 1,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
@@ -282,14 +280,16 @@ class ProductTileState extends State<ProductTile> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: ConstantWidgets().customText(
-                  value: "Avl stock : ${widget.product.quantity}",
+                  value: "Avl stock : ${product.quantity}",
                   color: ConstantData.textColor.withOpacity(0.9),
                   fontWeight: FontWeight.w400,
                   fontSize: font12Px(context: context),
                 ),
               ),
               priceText(context),
-              CartIcons(product: widget.product),
+              CartIcons(
+                product: product,
+              ),
             ],
           ),
         )
@@ -318,7 +318,7 @@ class ProductTileState extends State<ProductTile> {
                       ),
                     ),
                     TextSpan(
-                      text: widget.product.newMrp,
+                      text: product.newMrp,
                       style: TextStyle(
                           fontSize: font18Px(context: context) * 1.1,
                           color: ConstantData.primaryColor,
@@ -336,7 +336,7 @@ class ProductTileState extends State<ProductTile> {
               horizontal: 1,
             ),
             child: ConstantWidgets().customText(
-              value: widget.product.oldMrp,
+              value: product.oldMrp,
               fontSize: font12Px(context: context) * 0.8,
               color: Colors.grey,
               textDecoration: TextDecoration.lineThrough,
@@ -362,23 +362,38 @@ class CartIcons extends StatefulWidget {
 }
 
 class _CartIconsState extends State<CartIcons> {
-  int num = 0;
   bool cart = true;
+  final ProductController pcontroller = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    cart = (widget.product.cartQuantity ?? 0) == 0;
     return cart
         ? addIcon(context)
         : CartItemButtons(
-          maxQuantity: int.parse(widget.product.quantity),
-            itemquantity: 1,
+            callbackAdd: (() async {
+              await pcontroller.plusToCart(
+                  model: widget.product, context: context);
+            }),
+            callbackSub: (() async {
+              await pcontroller.minusToCart(
+                  model: widget.product, context: context);
+            }),
+            callbackVal: ((int n) async {
+              await pcontroller.updateCartQunatity(
+                  model: widget.product, value: n.toString(), context: context);
+            }),
+            maxQuantity: int.parse(widget.product.quantity),
+            itemquantity: widget.product.cartQuantity ?? 0,
             trailing: Padding(
               padding: const EdgeInsets.only(left: 3),
               child: InkWell(
-                onTap: () {
+                onTap: () async {
                   setState(() {
                     cart = true;
                   });
+                  await pcontroller.removeFromCart(
+                      model: widget.product, context: context);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(1),
@@ -398,11 +413,17 @@ class _CartIconsState extends State<CartIcons> {
 
   Widget addIcon(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         setState(() {
           cart = false;
-          num = 1;
         });
+        if (pcontroller.cartModel.value.productList
+                .indexWhere((element) => element.pid == widget.product.pid) ==
+            -1) {
+          await pcontroller.addToCart(model: widget.product, context: context);
+        } else {
+          Fluttertoast.showToast(msg: "Already in cart");
+        }
       },
       child: Container(
         decoration: BoxDecoration(

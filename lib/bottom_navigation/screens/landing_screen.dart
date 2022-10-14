@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:medrpha_trial/bottom_navigation/controller/bottom_naviagtion_controller.dart';
 import 'package:medrpha_trial/dashboard/screens/dashboard_screen.dart';
 import 'package:medrpha_trial/dashboard/screens/dashboardscreen.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
 import 'package:medrpha_trial/products/screens/product_screen.dart';
 import 'package:medrpha_trial/products/screens/product_screenA.dart';
 import 'package:medrpha_trial/profile/controller/profile_controller.dart';
@@ -20,7 +21,7 @@ class LandingScreen extends StatelessWidget {
     // const DashBoardScreen(),
     const DashBoardScreenA(),
     // const OrderHistoryScreen(),
-    ProductScreenA(),
+    const ProductScreenA(),
     const UserListScreen(),
     const ProfileInfoScreen(),
   ];
@@ -29,7 +30,8 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomNavController = Get.put(BottomNavigationController());
     // final profileController = Get.put(ProfileController());
-
+    final pcontroller = Get.put(ProductController());
+    pcontroller.init();
     return Scaffold(
       bottomNavigationBar: SizedBox(
         height: getScreenPercentSize(context, 7.2),

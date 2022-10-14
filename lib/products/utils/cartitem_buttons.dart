@@ -9,9 +9,13 @@ class CartItemButtons extends StatefulWidget {
   int itemquantity;
   final Widget? trailing;
   final int maxQuantity;
-  final Function(int n)? callback;
+  final Function()? callbackAdd;
+  final Function()? callbackSub;
+  final Function(int n)? callbackVal;
   CartItemButtons(
-      {this.callback,
+      {this.callbackAdd,
+      this.callbackSub,
+      this.callbackVal,
       this.trailing,
       required this.itemquantity,
       required this.maxQuantity,
@@ -78,7 +82,7 @@ class _CartItemButtonsState extends State<CartItemButtons> {
         onTap: () {
           setState(() {
             if (widget.itemquantity - 1 >= 0) widget.itemquantity--;
-            if (widget.callback != null) widget.callback!(widget.itemquantity);
+            if (widget.callbackSub != null) widget.callbackSub!();
           });
         },
         child: Container(
@@ -108,7 +112,7 @@ class _CartItemButtonsState extends State<CartItemButtons> {
               Fluttertoast.showToast(
                   msg: "Only ${widget.maxQuantity} items are available");
             }
-            if (widget.callback != null) widget.callback!(widget.itemquantity);
+            if (widget.callbackAdd != null) widget.callbackAdd!();
           });
         },
         child: Container(
@@ -156,16 +160,15 @@ class _CartItemButtonsState extends State<CartItemButtons> {
                     style: const ButtonStyle(
                       visualDensity: VisualDensity.comfortable,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       int temp = int.parse(controller.text);
                       if (temp <= widget.maxQuantity) {
                         setState(() {
                           widget.itemquantity = temp;
                         });
-                        if (widget.callback != null) {
-                          widget.callback!(widget.itemquantity);
+                        if (widget.callbackVal != null) {
+                          widget.callbackVal!(widget.itemquantity);
                         }
-                        Navigator.of(context).pop();
                       } else {
                         Fluttertoast.showToast(
                             msg:

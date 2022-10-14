@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
 import 'package:medrpha_trial/products/screens/paymentsuccess.dart';
 import 'package:medrpha_trial/products/utils/bottombtn.dart';
 import 'package:medrpha_trial/utils/size_config.dart';
@@ -7,11 +9,7 @@ import '../../utils/constant_data.dart';
 import '../../utils/wigets.dart';
 
 class PaymentSelection extends StatefulWidget {
-  final int itemInCart;
-  final int amountToBePaid;
-  const PaymentSelection(
-      {Key? key, required this.amountToBePaid, required this.itemInCart})
-      : super(key: key);
+  const PaymentSelection({Key? key}) : super(key: key);
 
   @override
   State<PaymentSelection> createState() => _PaymentSelectionState();
@@ -19,6 +17,7 @@ class PaymentSelection extends StatefulWidget {
 
 class _PaymentSelectionState extends State<PaymentSelection> {
   late String selectedPaymentOption;
+  final ProductController pcontroller = Get.find();
 
   final List<String> paymentOptions = [
     "Online Payment",
@@ -54,7 +53,8 @@ class _PaymentSelectionState extends State<PaymentSelection> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ConstantWidgets().customText(
-                        value: "${widget.itemInCart} item in the cart",
+                        value:
+                            "${pcontroller.cartModel.value.productList.length} item in the cart",
                         fontSize: font18Px(context: context),
                         color: Colors.grey,
                         fontWeight: FontWeight.w300,
@@ -68,7 +68,8 @@ class _PaymentSelectionState extends State<PaymentSelection> {
                             fontWeight: FontWeight.w300,
                           ),
                           ConstantWidgets().customText(
-                            value: "\$ ${widget.amountToBePaid}",
+                            value:
+                                "Rs ${pcontroller.cartModel.value.totalSalePrice}",
                             fontSize: font18Px(context: context) * 1.1,
                             color: Colors.black,
                             fontWeight: FontWeight.w500,

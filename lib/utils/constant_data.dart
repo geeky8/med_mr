@@ -6,6 +6,8 @@ class ConstantData {
   static String fontFamily = "Manrope";
   static String assetsPath = "assets/images/";
   static String imagePath = 'https://superadmintest.medrpha.com/allimage/';
+  static String productUrl = 'https://partnertest.medrpha.com/product_image/';
+
 
   static String dateFormat = "EEE ,MMM dd,yyyy";
 

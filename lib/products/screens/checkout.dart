@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
 import 'package:medrpha_trial/products/enums/category_type.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/payment_selection.dart';
@@ -10,18 +11,17 @@ import 'package:medrpha_trial/utils/size_config.dart';
 import 'package:medrpha_trial/utils/wigets.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  CheckoutScreen({required this.checkoutList, Key? key}) : super(key: key);
-  final List<ProductModel> checkoutList;
-  final DELIVERY_CHARGES = 40;
-  late int totalPrize;
+  CheckoutScreen({Key? key}) : super(key: key);
+  late final List<ProductModel> checkoutList;
+  final ProductController pcontroller = Get.find();
+  // final DELIVERY_CHARGES = 40;
+  late final double totalPrize;
 
   @override
   Widget build(BuildContext context) {
-    totalPrize = checkoutList.fold(
-      0,
-      (previousValue, element) =>
-          previousValue + element.cartQuantity! * int.parse(element.newMrp),
-    );
+    checkoutList = pcontroller.cartModel.value.productList;
+    totalPrize = double.parse(pcontroller.cartModel.value.totalSalePrice);
+    print("Price: ${pcontroller.cartModel.value.totalSalePrice}");
     return Scaffold(
       appBar: ConstantWidgets().customAppBar(
         title: "Checkout",
@@ -71,7 +71,8 @@ class CheckoutScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                       vertical: blockSizeVertical(context: context) * 1.5,
                     ),
-                    child: amountsTile(context, "Delivery", DELIVERY_CHARGES),
+                    // child: amountsTile(
+                    //     context, "Delivery", DELIVERY_CHARGES.toDouble()),
                   ),
                   const Divider(),
                   Padding(
@@ -81,7 +82,8 @@ class CheckoutScreen extends StatelessWidget {
                     child: amountsTile(
                       context,
                       "Amount to Pay",
-                      totalPrize + DELIVERY_CHARGES,
+                      // totalPrize + DELIVERY_CHARGES,
+                      totalPrize,
                       isBold: true,
                     ),
                   ),
@@ -92,9 +94,7 @@ class CheckoutScreen extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PaymentSelection(
-                          amountToBePaid: totalPrize + DELIVERY_CHARGES,
-                          itemInCart: checkoutList.length),
+                      builder: (context) => PaymentSelection(),
                     ),
                   );
                 },
@@ -105,7 +105,7 @@ class CheckoutScreen extends StatelessWidget {
     );
   }
 
-  Row amountsTile(BuildContext context, String type, int amount,
+  Row amountsTile(BuildContext context, String type, double amount,
       {bool isBold = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,7 +119,7 @@ class CheckoutScreen extends StatelessWidget {
           fontWeight: isBold ? FontWeight.w500 : FontWeight.w200,
         ),
         ConstantWidgets().customText(
-          value: '\$${amount.toString()}',
+          value: 'Rs ${amount.toString()}',
           color: isBold ? Colors.black : Colors.grey,
           fontSize: isBold
               ? font18Px(context: context) * 1.1
@@ -148,9 +148,13 @@ class _CheckoutItemTileState extends State<CheckoutItemTile> {
         children: [
           Expanded(
             flex: 1,
-            child: Image.asset(
-              "${ConstantData.assetsPath}${widget.product.productImg}",
-              fit: BoxFit.cover,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                  maxHeight: blockSizeVertical(context: context) * 10),
+              child: Image.network(
+                "${ConstantData.productUrl}${widget.product.productImg}",
+                fit: BoxFit.fitHeight,
+              ),
             ),
           ),
           Expanded(
@@ -183,7 +187,7 @@ class _CheckoutItemTileState extends State<CheckoutItemTile> {
           ),
           ConstantWidgets().customText(
             value:
-                "\$${int.parse(widget.product.newMrp) * (widget.product.cartQuantity!)}",
+                "Rs ${double.parse(widget.product.newMrp) * (widget.product.cartQuantity!)}",
             fontSize: font18Px(context: context) * 1.1,
             color: Colors.black,
             fontWeight: FontWeight.bold,
