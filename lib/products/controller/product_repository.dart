@@ -3,24 +3,25 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:medrpha_trial/products/utils/urls.dart';
+import 'package:medrpha_trial/utils/storage.dart';
 
 import '../models/cart_model.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
 import '../models/productresponse_model.dart';
 
-class ProductRepository{
-
+class ProductRepository {
   final _httpClient = http.Client();
 
   Future<List<CategoryModel>> getCategories() async {
     final catlist = <CategoryModel>[];
     // final sessId = await DataBox().readSessId();
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
     };
-    final resp = await _httpClient.post(Uri.parse(Urls.categoryUrl), body: body);
+    final resp =
+        await _httpClient.post(Uri.parse(Urls.categoryUrl), body: body);
 
     if (kDebugMode) {
       print('category resp -----------${resp.body}');
@@ -45,19 +46,20 @@ class ProductRepository{
     String? term,
     int? pageIndex,
   }) async {
-
     final productlist = <ProductModel>[];
-    // final sessId = await DataBox().readSessId();
+    final sessId = await DataStorage().readSessId();
     final body = {
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      "firm_id": "22",
+      // "sessid": "c9fc796d50917bf1",
+      "sessid": sessId,
       "term": term ?? '',
       "catcheck": categoryId ?? '',
       "PageIndex": (pageIndex ?? '1').toString(),
       "PageSize": '6'
     };
 
-    final resp = await _httpClient.post(Uri.parse(Urls.productsUrl), body: body);
+    final resp =
+        await _httpClient.post(Uri.parse(Urls.productsUrl), body: body);
 
     debugPrint('--- prod resp ---------${resp.body}');
 
@@ -72,7 +74,6 @@ class ProductRepository{
         final list = respBody['data'] as List<dynamic>;
         for (final i in list) {
           final model = ProductModel.fromJson(json: i);
-
           productlist.add(model);
         }
         debugPrint('------products lenght ${productlist.length}');
@@ -89,7 +90,7 @@ class ProductRepository{
   }) async {
     final body = {
       // "sessid": sessId,
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       "pid": model.pid,
       "price_id": model.priceId
     };
@@ -122,7 +123,7 @@ class ProductRepository{
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -145,7 +146,7 @@ class ProductRepository{
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -167,7 +168,7 @@ class ProductRepository{
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -175,8 +176,8 @@ class ProductRepository{
       "qtyfield": model.cartQuantity.toString(),
     };
 
-    final resp = await _httpClient.post(Uri.parse(Urls.updateProductQuantityUrl),
-        body: body);
+    final resp = await _httpClient
+        .post(Uri.parse(Urls.updateProductQuantityUrl), body: body);
 
     if (resp.statusCode == 200) {
       final respBody = jsonDecode(resp.body);
@@ -191,7 +192,7 @@ class ProductRepository{
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -199,7 +200,8 @@ class ProductRepository{
       "saleprice": model.salePrice,
     };
 
-    final resp = await _httpClient.post(Uri.parse(Urls.addToCartUrl), body: body);
+    final resp =
+        await _httpClient.post(Uri.parse(Urls.addToCartUrl), body: body);
 
     // print('------ add to cart${resp.body}');
 
@@ -217,13 +219,14 @@ class ProductRepository{
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId
     };
 
-    final resp = await _httpClient.post(Uri.parse(Urls.removeCartUrl), body: body);
+    final resp =
+        await _httpClient.post(Uri.parse(Urls.removeCartUrl), body: body);
 
     debugPrint('------ removal from cart -------${resp.body}');
 
@@ -242,7 +245,7 @@ class ProductRepository{
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "34c4efad30e6e2d4",
+      "sessid": "c9fc796d50917bf1",
       // "sessid": sessId,
     };
 
@@ -276,5 +279,5 @@ class ProductRepository{
   }
 
   //------------------------Cart----------------------------------
-  
+
 }

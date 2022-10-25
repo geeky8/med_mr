@@ -70,7 +70,10 @@ class DashBoardScreenA extends StatelessWidget {
 }
 
 class SeachBar extends StatelessWidget {
-  SeachBar({super.key});
+  final Function(String a)? onChange;
+  final Function()? onTap;
+  final bool autoFocus;
+  SeachBar({this.autoFocus = false, this.onTap, this.onChange, super.key});
   final InputBorder myBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.grey.withOpacity(0.5),
@@ -78,19 +81,35 @@ class SeachBar extends StatelessWidget {
     borderRadius: BorderRadius.circular(30),
   );
 
+  final FocusNode fn = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: autoFocus,
+      focusNode: fn,
+      onTap: () {
+        if (onTap != null) {
+          onTap!();
+        }
+        autoFocus ? fn.requestFocus() : fn.unfocus();
+      },
+      onChanged: ((value) {
+        if (onChange != null) {
+          onChange!(value);
+        }
+      }),
       decoration: InputDecoration(
         enabledBorder: myBorder,
         border: myBorder,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.grey,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(30),
-        ),
+        focusedBorder: myBorder,
+        // focusedBorder: OutlineInputBorder(
+        //   borderSide: const BorderSide(
+        //     color: Colors.grey,
+        //     width: 2,
+        //   ),
+        //   borderRadius: BorderRadius.circular(30),
+        // ),
         prefixIcon: Icon(
           Icons.search,
           color: ConstantData.secondaryColor,

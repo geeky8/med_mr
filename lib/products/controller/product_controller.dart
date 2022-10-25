@@ -21,6 +21,8 @@ class ProductController extends GetxController {
 
   var homeState = HomeState.SUCCESS.obs;
 
+  var searchState = HomeState.SUCCESS.obs;
+
   final ethicalProductList = <ProductModel>[].obs;
 
   final genericProductList = <ProductModel>[].obs;
@@ -300,6 +302,15 @@ class ProductController extends GetxController {
 
     final category = categoriesfromValue(model.category);
     print(model.cartQuantity);
+    final index = searchList.indexWhere((element) => element.pid == model.pid);
+    // final fModel = ethicalProductList.f
+    if (index != -1) {
+      final cartModel = searchList[index]
+          .copyWith(cartQuantity: model.cartQuantity, subTotal: model.subTotal);
+      searchList
+        ..removeAt(index)
+        ..insert(index, cartModel);
+    }
 
     switch (category) {
       case CategoriesType.ETHICAL:
@@ -611,5 +622,55 @@ class ProductController extends GetxController {
       }
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+  }
+  // StoreState searchState = StoreState.EMPTY;
+
+  List<ProductModel> searchList = <ProductModel>[].obs;
+
+  Future<void> getSearchedResults({required String term, bool? load}) async {
+    searchState.value = HomeState.LOADING;
+    // print(term);
+    if (term.isNotEmpty) {
+      if (kDebugMode) {
+        print(term);
+      }
+      // if (load == null) searchState = StoreState.LOADING;
+      Future.delayed(Duration.zero, () async {
+        final productRespModel = await ProductRepository().getProducts(
+          term: term,
+          pageIndex: searchIndex.value,
+        );
+        if (productRespModel != null) {
+          if (productRespModel.message == 'successful !!') {
+            if (productRespModel.productList.isNotEmpty) {
+              if (load != null) {
+                searchList
+                  ..clear()
+                  ..addAll(productRespModel.productList);
+              } else {
+                searchList.addAll(productRespModel.productList);
+              }
+            } else if (searchIndex > 1) {
+              searchIndex--;
+              Fluttertoast.showToast(msg: 'No more products to show');
+            }
+            // searchState = StoreState.SUCCESS;
+          } else if (productRespModel.message ==
+              'product not serviceable in your area !!!') {
+            // message = 'Products not servicable in your selected area!';
+            // searchState = StoreState.ERROR;
+          } else {
+            // message = 'Admin Status Pending';
+            // searchState = StoreState.ERROR;
+          }
+        } else {
+          // searchState = StoreState.EMPTY;
+        }
+      });
+    } else {
+      searchList.clear();
+      // searchState = StoreState.EMPTY;
+    }
+    searchState.value = HomeState.SUCCESS;
   }
 }

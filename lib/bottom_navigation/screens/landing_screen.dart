@@ -30,8 +30,6 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomNavController = Get.put(BottomNavigationController());
     // final profileController = Get.put(ProfileController());
-    final pcontroller = Get.put(ProductController());
-    pcontroller.init();
     return Scaffold(
       bottomNavigationBar: SizedBox(
         height: getScreenPercentSize(context, 7.2),

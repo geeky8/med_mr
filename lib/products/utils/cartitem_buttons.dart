@@ -163,11 +163,8 @@ class _CartItemButtonsState extends State<CartItemButtons> {
                     onPressed: () async {
                       int temp = int.parse(controller.text);
                       if (temp <= widget.maxQuantity) {
-                        setState(() {
-                          widget.itemquantity = temp;
-                        });
                         if (widget.callbackVal != null) {
-                          widget.callbackVal!(widget.itemquantity);
+                          widget.callbackVal!(temp);
                         }
                       } else {
                         Fluttertoast.showToast(

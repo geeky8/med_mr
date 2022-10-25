@@ -17,7 +17,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    cart = pcontroller.cartModel.value;
     return Scaffold(
       appBar: ConstantWidgets().customAppBar(
         title: "Cart",
@@ -56,15 +56,21 @@ class CartScreen extends StatelessWidget {
                 );
               }),
             ),
-            BottomButton(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CheckoutScreen(),
-                  ),
-                );
-              },
-              text: "Checkout",
+            Obx(
+              () {
+                return pcontroller.cartModel.value.productList.isNotEmpty
+                    ? BottomButton(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CheckoutScreen(),
+                            ),
+                          );
+                        },
+                        text: "Checkout",
+                      )
+                    : const SizedBox();
+              }
             ),
           ],
         ),

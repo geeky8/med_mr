@@ -15,6 +15,8 @@ import 'package:medrpha_trial/profile/controller/profile_controller.dart';
 import 'package:medrpha_trial/users/controller/users_mr_controller.dart';
 import 'package:medrpha_trial/utils/storage.dart';
 
+import '../../products/controller/product_controller.dart';
+
 class AuthController extends GetxController {
   final repository = AuthRepository();
 
@@ -51,7 +53,7 @@ class AuthController extends GetxController {
       final userMrController = Get.put(UserMRController());
 
       await dashboardController.getDashboard();
-      profileController.getProfile();
+      await profileController.getProfile();
       if (authModel.value.mrType == MRType.EXECUTIVE) {
         userMrController
           ..getUsersList()
@@ -61,6 +63,9 @@ class AuthController extends GetxController {
       }
 
       state.value = StoreState.SUCCESS;
+    final pcontroller = Get.put(ProductController());
+    pcontroller.init();
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

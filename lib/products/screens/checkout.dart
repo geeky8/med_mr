@@ -20,8 +20,7 @@ class CheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     checkoutList = pcontroller.cartModel.value.productList;
-    totalPrize = double.parse(pcontroller.cartModel.value.totalSalePrice);
-    print("Price: ${pcontroller.cartModel.value.totalSalePrice}");
+    totalPrize = checkoutList.fold<double>(0.0, (previousValue, element) => previousValue+(double.parse(element.newMrp)* (element.cartQuantity!)));
     return Scaffold(
       appBar: ConstantWidgets().customAppBar(
         title: "Checkout",
@@ -92,9 +91,11 @@ class CheckoutScreen extends StatelessWidget {
             ),
             BottomButton(
                 onTap: () {
+                  pcontroller.cartModel.value =
+        pcontroller.cartModel.value.copyWith(totalSalePrice: totalPrize.toString());
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PaymentSelection(),
+                      builder: (context) => const PaymentSelection(),
                     ),
                   );
                 },

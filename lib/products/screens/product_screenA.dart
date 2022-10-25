@@ -6,6 +6,7 @@ import 'package:medrpha_trial/products/enums/category_type.dart';
 import 'package:medrpha_trial/products/models/category_model.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/cart_screen.dart';
+import 'package:medrpha_trial/products/screens/seach_screen.dart';
 import 'package:medrpha_trial/products/utils/cartitem_buttons.dart';
 import 'package:medrpha_trial/utils/constant_data.dart';
 import 'package:medrpha_trial/utils/size_config.dart';
@@ -115,7 +116,13 @@ class _ProductScreenAState extends State<ProductScreenA> {
         ),
         child: Column(
           children: [
-            SeachBar(),
+            SeachBar(
+              onTap: () {
+                pcontroller.searchList.clear();
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SeachScreen()));
+              },
+            ),
             Obx(() {
               return dropDownSelection(context);
             }),
@@ -144,7 +151,8 @@ class _ProductScreenAState extends State<ProductScreenA> {
                 //switch cases to add list
 
                 case HomeState.LOADING:
-                  return const Expanded(child: Center(child: CircularProgressIndicator()));
+                  return const Expanded(
+                      child: Center(child: CircularProgressIndicator()));
                 case HomeState.SUCCESS:
                   return Flexible(
                     child: productItem.isEmpty
@@ -175,7 +183,6 @@ class _ProductScreenAState extends State<ProductScreenA> {
                                     borderRadius: ConstantData.borderRadius,
                                     child: ProductTile(
                                       product: productItem[index],
-                                      pcontroller: pcontroller,
                                     ),
                                   ),
                                 ),
@@ -249,9 +256,9 @@ class _ProductScreenAState extends State<ProductScreenA> {
 
 class ProductTile extends StatelessWidget {
   final ProductModel product;
-  final ProductController pcontroller;
-  const ProductTile(
-      {required this.product, required this.pcontroller, Key? key})
+  final ProductController pcontroller = Get.find();
+  ProductTile(
+      {required this.product, Key? key})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
