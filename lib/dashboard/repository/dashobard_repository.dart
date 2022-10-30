@@ -11,14 +11,14 @@ class DashboardRepository {
   Future<DashboardModel?> getDashboardDetails() async {
     final sessId = DataStorage().readSessId();
     if (sessId != null) {
-      final body = {"sessid": "b05e1eccfa575889"};
+      final body = {"sessid": sessId};
 
       final resp = await http.post(
         Uri.parse(dashboardUrl),
         body: body,
       );
 
-      debugPrint('-----------${resp.body}');
+      debugPrint('------ dashboard-----${resp.body}');
 
       if (resp.statusCode == 200) {
         final respBody = jsonDecode(resp.body);

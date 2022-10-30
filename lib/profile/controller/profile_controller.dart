@@ -23,7 +23,7 @@ class ProfileController extends GetxController {
     state.value = StoreState.LOADING;
     if (kDebugMode) {
       final storage = DataStorage();
-      print('sess Id ------- ${storage.readSessId()}');
+      print('progilr sess Id ------- ${storage.readSessId()}');
     }
     final value =
         await repository.getProfile(sessId: DataStorage().readSessId());
