@@ -305,6 +305,9 @@ class UserMRController extends GetxController {
         case RegisterationStatus.COMPLETE:
           Fluttertoast.showToast(msg: 'Registeration completed');
           break;
+        case RegisterationStatus.NON:
+          Fluttertoast.showToast(msg: 'No Registration');
+          break;
         case RegisterationStatus.LINK:
           Fluttertoast.showToast(msg: 'Link has been sent successfully');
           break;

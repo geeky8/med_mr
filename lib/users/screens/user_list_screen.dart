@@ -96,6 +96,13 @@ class UserListScreen extends StatelessWidget {
                 ..clear()
                 ..addAll(controller.initalUsersList);
               break;
+            case RegisterationStatus.NON:
+              usersList
+                ..clear()
+                ..addAll(controller.usersList
+                    .where((user) => user.status == "0")
+                    .toList());
+              break;
             case RegisterationStatus.COMPLETE:
               usersList
                 ..clear()
@@ -110,6 +117,23 @@ class UserListScreen extends StatelessWidget {
                   MRType.EXECUTIVE)
                 Row(
                   children: [
+                    Expanded(
+                      flex: 2,
+                      child: ChipTile(
+                        label: 'No Registration',
+                        func: () {
+                          controller.usersStatus.value =
+                              RegisterationStatus.NON;
+                        },
+                        color: (controller.usersStatus.value ==
+                                RegisterationStatus.NON
+                            ? ConstantData.primaryColor
+                            : null),
+                      ),
+                    ),
+                    SizedBox(
+                      width: blockSizeHorizontal(context: context) * 4,
+                    ),
                     Expanded(
                       flex: 2,
                       child: ChipTile(

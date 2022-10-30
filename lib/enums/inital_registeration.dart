@@ -12,7 +12,10 @@ enum RegisterationStatus {
   COMPLETE,
 
   ///[RegisterationStatus.LINK] to check whether user has received the link or not.
-  LINK
+  LINK,
+
+  ///[RegisterationStatus.NON] to check whether user has not done any type of registration .
+  NON
 }
 
 extension GetRegsiterationStatus on RegisterationStatus {
@@ -24,6 +27,8 @@ extension GetRegsiterationStatus on RegisterationStatus {
         return 'Completed';
       case RegisterationStatus.LINK:
         return 'Link';
+      case RegisterationStatus.NON:
+        return 'Non';
     }
   }
 }

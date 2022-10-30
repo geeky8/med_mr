@@ -17,7 +17,8 @@ class ProductRepository {
     final catlist = <CategoryModel>[];
     // final sessId = await DataBox().readSessId();
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
     };
     final resp =
@@ -47,11 +48,12 @@ class ProductRepository {
     int? pageIndex,
   }) async {
     final productlist = <ProductModel>[];
-    final sessId = await DataStorage().readSessId();
+    // final sessId = await DataStorage().readSessId();
     final body = {
       "firm_id": "22",
-      // "sessid": "c9fc796d50917bf1",
-      "sessid": sessId,
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
+      // "sessid": sessId,
       "term": term ?? '',
       "catcheck": categoryId ?? '',
       "PageIndex": (pageIndex ?? '1').toString(),
@@ -90,7 +92,8 @@ class ProductRepository {
   }) async {
     final body = {
       // "sessid": sessId,
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       "pid": model.pid,
       "price_id": model.priceId
     };
@@ -123,7 +126,8 @@ class ProductRepository {
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -146,7 +150,8 @@ class ProductRepository {
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -168,7 +173,8 @@ class ProductRepository {
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -192,7 +198,8 @@ class ProductRepository {
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -219,7 +226,8 @@ class ProductRepository {
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId
@@ -245,7 +253,8 @@ class ProductRepository {
     // final sessId = await DataBox().readSessId();
 
     final body = {
-      "sessid": "c9fc796d50917bf1",
+      //"sessid": "c9fc796d50917bf1",
+      "sessid": "34c4efad30e6e2d4",
       // "sessid": sessId,
     };
 

@@ -10,6 +10,7 @@ import 'package:medrpha_trial/products/screens/product_screen.dart';
 import 'package:medrpha_trial/products/screens/product_screenA.dart';
 import 'package:medrpha_trial/profile/controller/profile_controller.dart';
 import 'package:medrpha_trial/profile/screens/profile_info_screen.dart';
+import 'package:medrpha_trial/users/screens/complete_reg_screen.dart';
 import 'package:medrpha_trial/users/screens/user_list_screen.dart';
 import 'package:medrpha_trial/utils/constant_data.dart';
 import 'package:medrpha_trial/utils/size_config.dart';
@@ -19,9 +20,10 @@ class LandingScreen extends StatelessWidget {
 
   final pages = [
     // const DashBoardScreen(),
+    const CompleteRegScreen(),
     const DashBoardScreenA(),
     // const OrderHistoryScreen(),
-    const ProductScreenA(),
+    // const ProductScreenA(),
     const UserListScreen(),
     const ProfileInfoScreen(),
   ];
@@ -67,7 +69,15 @@ class LandingScreen extends StatelessWidget {
                 //   ),
                 //   label: 'Home',
                 // ),
-
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.home_outlined),
+                  activeIcon: Icon(
+                    Icons.home_outlined,
+                    color: ConstantData.primaryColor,
+                    // colorBlendMode: BlendMode.srcIn,
+                  ),
+                  label: 'Home',
+                ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
                     '${ConstantData.assetsPath}dashboard.png',
@@ -79,15 +89,15 @@ class LandingScreen extends StatelessWidget {
                   ),
                   label: 'Dashboard',
                 ),
-                BottomNavigationBarItem(
-                  icon: Image.asset('${ConstantData.assetsPath}shop.png'),
-                  activeIcon: Image.asset(
-                    '${ConstantData.assetsPath}shop.png',
-                    color: ConstantData.primaryColor,
-                    colorBlendMode: BlendMode.srcIn,
-                  ),
-                  label: 'Shop',
-                ),
+                // BottomNavigationBarItem(
+                //   icon: Image.asset('${ConstantData.assetsPath}shop.png'),
+                //   activeIcon: Image.asset(
+                //     '${ConstantData.assetsPath}shop.png',
+                //     color: ConstantData.primaryColor,
+                //     colorBlendMode: BlendMode.srcIn,
+                //   ),
+                //   label: 'Shop',
+                // ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
                     '${ConstantData.assetsPath}group.png',
