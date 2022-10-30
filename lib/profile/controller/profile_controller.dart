@@ -22,7 +22,8 @@ class ProfileController extends GetxController {
   Future<void> getProfile() async {
     state.value = StoreState.LOADING;
     if (kDebugMode) {
-      print('sess Id ------- ${DataStorage().readSessId()}');
+      final storage = DataStorage();
+      print('sess Id ------- ${storage.readSessId()}');
     }
     final value =
         await repository.getProfile(sessId: DataStorage().readSessId());

@@ -4,6 +4,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:medrpha_trial/bottom_navigation/controller/bottom_naviagtion_controller.dart';
 import 'package:medrpha_trial/dashboard/screens/dashboard_screen.dart';
+import 'package:medrpha_trial/dashboard/screens/dashboardscreen.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/screens/product_screen.dart';
+import 'package:medrpha_trial/products/screens/product_screenA.dart';
 import 'package:medrpha_trial/profile/controller/profile_controller.dart';
 import 'package:medrpha_trial/profile/screens/profile_info_screen.dart';
 import 'package:medrpha_trial/users/screens/user_list_screen.dart';
@@ -14,8 +18,10 @@ class LandingScreen extends StatelessWidget {
   LandingScreen({Key? key}) : super(key: key);
 
   final pages = [
-    const DashBoardScreen(),
+    // const DashBoardScreen(),
+    const DashBoardScreenA(),
     // const OrderHistoryScreen(),
+    const ProductScreenA(),
     const UserListScreen(),
     const ProfileInfoScreen(),
   ];
@@ -24,7 +30,6 @@ class LandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final bottomNavController = Get.put(BottomNavigationController());
     // final profileController = Get.put(ProfileController());
-
     return Scaffold(
       bottomNavigationBar: SizedBox(
         height: getScreenPercentSize(context, 7.2),
@@ -74,15 +79,15 @@ class LandingScreen extends StatelessWidget {
                   ),
                   label: 'Dashboard',
                 ),
-                // BottomNavigationBarItem(
-                //   icon: Image.asset(ConstantData.assetsPath + 'categories.png'),
-                //   activeIcon: Image.asset(
-                //     '${ConstantData.assetsPath}categories.png',
-                //     color: ConstantData.primaryColor,
-                //     colorBlendMode: BlendMode.srcIn,
-                //   ),
-                //   label: 'Category',
-                // ),
+                BottomNavigationBarItem(
+                  icon: Image.asset('${ConstantData.assetsPath}shop.png'),
+                  activeIcon: Image.asset(
+                    '${ConstantData.assetsPath}shop.png',
+                    color: ConstantData.primaryColor,
+                    colorBlendMode: BlendMode.srcIn,
+                  ),
+                  label: 'Shop',
+                ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
                     '${ConstantData.assetsPath}group.png',
