@@ -7,6 +7,7 @@ import 'package:medrpha_trial/products/controller/product_repository.dart';
 import 'package:medrpha_trial/products/enums/home_state.dart';
 import 'package:medrpha_trial/products/models/category_model.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
+import 'package:medrpha_trial/utils/storage.dart';
 import 'package:medrpha_trial/utils/wigets.dart';
 
 import '../enums/category_type.dart';
@@ -94,6 +95,7 @@ class ProductController extends GetxController {
     final productRespModel = await ProductRepository().getProducts(
       categoryId: '1',
       pageIndex: ethicalPageIndex.value,
+      firmId: firmId.value.toString()
     );
     // print(productRespModel!.message);
     if (productRespModel != null) {
@@ -117,7 +119,7 @@ class ProductController extends GetxController {
   }
 
   Future<ProductModel> getProductDetails({required ProductModel model}) async {
-    // final sessId = await DataBox().readSessId();
+    // final sessId = DataStorage().readSessId();
     final fetchModel = await ProductRepository().getProductDetails(
       model: model,
       // sessId: "34c4efad30e6e2d4",
@@ -131,6 +133,7 @@ class ProductController extends GetxController {
     final productRespModel = await ProductRepository().getProducts(
       categoryId: '2',
       pageIndex: genericPageIndex.value,
+      firmId: firmId.value.toString()
     );
     // print(productRespModel!.message);
     if (productRespModel != null) {
@@ -158,6 +161,8 @@ class ProductController extends GetxController {
     final productRespModel = await ProductRepository().getProducts(
       categoryId: '3',
       pageIndex: surgicalPageIndex.value,
+      firmId: firmId.value.toString()
+
     );
     // print(productRespModel!.message);
     if (productRespModel != null) {
@@ -185,6 +190,8 @@ class ProductController extends GetxController {
     final productRespModel = await ProductRepository().getProducts(
       categoryId: '4',
       pageIndex: vetPageIndex.value,
+      firmId: firmId.value.toString()
+
     );
     // print(productRespModel!.message);
     if (productRespModel != null) {
@@ -212,6 +219,8 @@ class ProductController extends GetxController {
     final productRespModel = await ProductRepository().getProducts(
       categoryId: '5',
       pageIndex: ayurvedicPageIndex.value,
+      firmId: firmId.value.toString()
+
     );
     // print(productRespModel!.message);
     if (productRespModel != null) {
@@ -239,6 +248,8 @@ class ProductController extends GetxController {
     final productRespModel = await ProductRepository().getProducts(
       categoryId: '6',
       pageIndex: generalPageIndex.value,
+      firmId: firmId.value.toString()
+
     );
     // print(productRespModel!.message);
     if (productRespModel != null) {
@@ -641,6 +652,8 @@ class ProductController extends GetxController {
         final productRespModel = await ProductRepository().getProducts(
           term: term,
           pageIndex: searchIndex.value,
+      firmId: firmId.value.toString()
+
         );
         if (productRespModel != null) {
           if (productRespModel.message == 'successful !!') {

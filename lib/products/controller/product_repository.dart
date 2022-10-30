@@ -15,11 +15,12 @@ class ProductRepository {
 
   Future<List<CategoryModel>> getCategories() async {
     final catlist = <CategoryModel>[];
-    // final sessId = await DataBox().readSessId();
+        final sessId = DataStorage().readSessId();
+
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
     };
     final resp =
         await _httpClient.post(Uri.parse(Urls.categoryUrl), body: body);
@@ -46,14 +47,15 @@ class ProductRepository {
     bool? refresh,
     String? term,
     int? pageIndex,
+    String? firmId,
   }) async {
     final productlist = <ProductModel>[];
-    // final sessId = await DataStorage().readSessId();
+    final sessId = DataStorage().readSessId();
     final body = {
-      "firm_id": "22",
+      "firm_id": firmId ?? "",
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
       "term": term ?? '',
       "catcheck": categoryId ?? '',
       "PageIndex": (pageIndex ?? '1').toString(),
@@ -90,10 +92,12 @@ class ProductRepository {
     required ProductModel model,
     // required String sessId,
   }) async {
+    final sessId = DataStorage().readSessId();
+
     final body = {
-      // "sessid": sessId,
+      "sessid": sessId,
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
+      // "sessid": "34c4efad30e6e2d4",
       "pid": model.pid,
       "price_id": model.priceId
     };
@@ -123,12 +127,13 @@ class ProductRepository {
   }
 
   Future<int?> plusTheCart({required ProductModel model}) async {
-    // final sessId = await DataBox().readSessId();
+    final sessId = DataStorage().readSessId();
+
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
       "quantity": model.quantity
@@ -147,12 +152,13 @@ class ProductRepository {
   }
 
   Future<int?> minusTheCart({required ProductModel model}) async {
-    // final sessId = await DataBox().readSessId();
+    final sessId = DataStorage().readSessId();
+
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
     };
@@ -170,12 +176,13 @@ class ProductRepository {
   }
 
   Future<int?> updateQuantity({required ProductModel model}) async {
-    // final sessId = await DataBox().readSessId();
+        final sessId = DataStorage().readSessId();
+
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
       "quantity": model.quantity,
@@ -195,12 +202,13 @@ class ProductRepository {
   }
 
   Future<int?> addToCart({required ProductModel model}) async {
-    // final sessId = await DataBox().readSessId();
+        final sessId = DataStorage().readSessId();
+
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
       "WPID": model.wpid,
@@ -223,12 +231,13 @@ class ProductRepository {
   }
 
   Future<int?> removeFromCart({required ProductModel model}) async {
-    // final sessId = await DataBox().readSessId();
+        final sessId = DataStorage().readSessId();
+
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId
     };
@@ -250,12 +259,13 @@ class ProductRepository {
   }
 
   Future<CartModel> getCart() async {
-    // final sessId = await DataBox().readSessId();
+        final sessId = DataStorage().readSessId();
+
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
-      "sessid": "34c4efad30e6e2d4",
-      // "sessid": sessId,
+      // "sessid": "34c4efad30e6e2d4",
+      "sessid": sessId,
     };
 
     final List<ProductModel> prodList = [];
