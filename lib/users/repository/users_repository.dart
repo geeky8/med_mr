@@ -384,6 +384,8 @@ class UserRepository {
         body: body,
       );
 
+      print('initial users -------- ${resp.body}');
+
       if (resp.statusCode == 200) {
         final respBody = jsonDecode(resp.body) as Map<String, dynamic>;
         if (respBody['status'] as String == '1') {

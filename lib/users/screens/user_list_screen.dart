@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:medrpha_trial/enums/inital_registeration.dart';
 import 'package:medrpha_trial/enums/mr_type.dart';
 import 'package:medrpha_trial/enums/user_status.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/screens/product_screen.dart';
 import 'package:medrpha_trial/users/controller/users_mr_controller.dart';
 import 'package:medrpha_trial/users/models/mr_model.dart';
 import 'package:medrpha_trial/users/models/user_model.dart';
 import 'package:medrpha_trial/users/screens/create_account_screen.dart';
 import 'package:medrpha_trial/users/screens/register_edit_info_screen.dart';
 import 'package:medrpha_trial/users/screens/user_info_screen.dart';
+import 'package:medrpha_trial/users/screens/verify_otp_screen.dart';
 import 'package:medrpha_trial/utils/constant_data.dart';
 import 'package:medrpha_trial/utils/size_config.dart';
 import 'package:medrpha_trial/utils/storage.dart';
@@ -99,9 +102,7 @@ class UserListScreen extends StatelessWidget {
             case RegisterationStatus.NON:
               usersList
                 ..clear()
-                ..addAll(controller.usersList
-                    .where((user) => user.status == "0")
-                    .toList());
+                ..addAll(controller.nonRegUsersList);
               break;
             case RegisterationStatus.COMPLETE:
               usersList
@@ -120,7 +121,7 @@ class UserListScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: ChipTile(
-                        label: 'No Registration',
+                        label: 'Non-Registred',
                         func: () {
                           controller.usersStatus.value =
                               RegisterationStatus.NON;
@@ -137,7 +138,7 @@ class UserListScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: ChipTile(
-                        label: 'Initial',
+                        label: 'Step-1 Completed',
                         func: () {
                           controller.usersStatus.value =
                               RegisterationStatus.INITAL;
@@ -440,33 +441,102 @@ class AmanFirmInfoTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                userModel.phoneNo,
-                style: TextStyle(
-                  color: ConstantData.mainTextColor,
-                  fontSize: font18Px(context: context) * 1.1,
-                  fontWeight: FontWeight.w500,
-                ),
+              // Text(
+              //   userModel.phoneNo,
+              //   style: TextStyle(
+              //     color: ConstantData.mainTextColor,
+              //     fontSize: font18Px(context: context) * 1.1,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              // ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ConstantWidgets().customText(
+                    value: userModel.phoneNo,
+                    fontSize: font18Px(context: context),
+                    fontWeight: FontWeight.w500,
+                    color: ConstantData.mainTextColor,
+                  ),
+                  if (userModel.registerationStatus ==
+                      RegisterationStatus.COMPLETE)
+                    ConstantWidgets().customText(
+                      value: userModel.status,
+                      fontSize: font15Px(context: context),
+                      fontWeight: FontWeight.w600,
+                      color: (userModel.status == 'Approved')
+                          ? ConstantData.primaryColor
+                          : Colors.red,
+                    ),
+                ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                decoration: BoxDecoration(
-                  borderRadius: ConstantData.borderRadius,
-                  color: ConstantData.primaryColor,
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    if (userModel.status == 'Approved') {
-                    } else {}
+              Offstage(
+                offstage: (userModel.registerationStatus ==
+                        RegisterationStatus.COMPLETE &&
+                    userModel.status != 'Approved'),
+                child: InkWell(
+                  onTap: () {
+                    switch (userModel.registerationStatus) {
+                      case RegisterationStatus.INITAL:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => RegisterEditInfoScreen(
+                              userModel: userModel,
+                            ),
+                          ),
+                        );
+
+                        break;
+                      case RegisterationStatus.COMPLETE:
+                        final productController = Get.put(ProductController());
+                        productController.firmId.value = userModel.firmId;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ProductScreen(),
+                          ),
+                        );
+                        break;
+                      case RegisterationStatus.LINK:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => OTPScreen(
+                              contact: userModel.phoneNo,
+                            ),
+                          ),
+                        );
+                        break;
+                      case RegisterationStatus.NON:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => OTPScreen(
+                              contact: userModel.phoneNo,
+                            ),
+                          ),
+                        );
+                        break;
+                    }
                   },
-                  child: Text(
-                    (userModel.status == 'Approved')
-                        ? "Complete Reg"
-                        : "Get OTP",
-                    style: TextStyle(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: blockSizeHorizontal(context: context) * 4,
+                      vertical: blockSizeVertical(context: context),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: ConstantData.borderRadius,
+                      color: ConstantData.primaryColor,
+                    ),
+                    child: Text(
+                      userModel.status.getUser(userModel),
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: font12Px(context: context) * 1.1,
-                        fontWeight: FontWeight.w700),
+                        fontSize: font15Px(context: context),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -475,6 +545,21 @@ class AmanFirmInfoTile extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension GetUserStatus on String {
+  String getUser(UserModel model) {
+    switch (model.registerationStatus) {
+      case RegisterationStatus.INITAL:
+        return 'Add Details';
+      case RegisterationStatus.COMPLETE:
+        return 'Order Now';
+      case RegisterationStatus.LINK:
+        return 'Register';
+      case RegisterationStatus.NON:
+        return 'Register';
+    }
   }
 }
 

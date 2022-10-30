@@ -54,8 +54,9 @@ class UserMRController extends GetxController {
   final state = (StoreState.SUCCESS).obs;
   final usersList = <UserModel>[].obs;
   final mrList = <MRModel>[].obs;
-  final usersStatus = RegisterationStatus.INITAL.obs;
+  final usersStatus = RegisterationStatus.NON.obs;
   final initalUsersList = <UserModel>[].obs;
+  final nonRegUsersList = <UserModel>[].obs;
 
   final countryList = <AddressModel>[].obs;
   final stateList = <AddressModel>[].obs;
@@ -323,9 +324,13 @@ class UserMRController extends GetxController {
     state.value = StoreState.LOADING;
     final value = await repository.getInitalUsersList();
     if (value != null) {
-      initalUsersList
-        ..clear()
-        ..addAll(value);
+      for (final i in value) {
+        if (i.firmId == '') {
+          nonRegUsersList.add(i);
+        } else {
+          initalUsersList.add(i);
+        }
+      }
     } else {
       Fluttertoast.showToast(msg: 'Failed to get users');
     }

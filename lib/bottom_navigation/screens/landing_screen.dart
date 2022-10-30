@@ -20,7 +20,7 @@ class LandingScreen extends StatelessWidget {
 
   final pages = [
     // const DashBoardScreen(),
-    const CompleteRegScreen(),
+    // const CompleteRegScreen(),
     const DashBoardScreenA(),
     // const OrderHistoryScreen(),
     // const ProductScreenA(),
@@ -69,15 +69,15 @@ class LandingScreen extends StatelessWidget {
                 //   ),
                 //   label: 'Home',
                 // ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.home_outlined),
-                  activeIcon: Icon(
-                    Icons.home_outlined,
-                    color: ConstantData.primaryColor,
-                    // colorBlendMode: BlendMode.srcIn,
-                  ),
-                  label: 'Home',
-                ),
+                // BottomNavigationBarItem(
+                //   icon: const Icon(Icons.home_outlined),
+                //   activeIcon: Icon(
+                //     Icons.home_outlined,
+                //     color: ConstantData.primaryColor,
+                //     // colorBlendMode: BlendMode.srcIn,
+                //   ),
+                //   label: 'Home',
+                // ),
                 BottomNavigationBarItem(
                   icon: Image.asset(
                     '${ConstantData.assetsPath}dashboard.png',

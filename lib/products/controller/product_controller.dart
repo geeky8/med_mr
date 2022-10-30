@@ -23,6 +23,8 @@ class ProductController extends GetxController {
 
   var searchState = HomeState.SUCCESS.obs;
 
+  final firmId = ''.obs;
+
   final ethicalProductList = <ProductModel>[].obs;
 
   final genericProductList = <ProductModel>[].obs;
