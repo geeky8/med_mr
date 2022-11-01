@@ -38,6 +38,9 @@ class CartScreen extends StatelessWidget {
                 }
                 return ListView.separated(
                   itemCount: pcontroller.cartModel.value.productList.length,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: blockSizeHorizontal(context: context) * 4,
+                  ),
                   separatorBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.symmetric(
@@ -56,22 +59,20 @@ class CartScreen extends StatelessWidget {
                 );
               }),
             ),
-            Obx(
-              () {
-                return pcontroller.cartModel.value.productList.isNotEmpty
-                    ? BottomButton(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => CheckoutScreen(),
-                            ),
-                          );
-                        },
-                        text: "Checkout",
-                      )
-                    : const SizedBox();
-              }
-            ),
+            Obx(() {
+              return pcontroller.cartModel.value.productList.isNotEmpty
+                  ? BottomButton(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CheckoutScreen(),
+                          ),
+                        );
+                      },
+                      text: "Checkout",
+                    )
+                  : const SizedBox();
+            }),
           ],
         ),
       ),
@@ -91,96 +92,117 @@ class _CartItemTileState extends State<CartItemTile> {
   final ProductController pcontroller = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        IconButton(
-            onPressed: () {
-              pcontroller.removeFromCart(
-                  model: widget.product, context: context);
-            },
-            icon: const Icon(Icons.delete_outline_outlined)),
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxHeight: blockSizeVertical(context: context) * 10),
-                child: Image.network(
-                  "${ConstantData.productUrl}${widget.product.productImg}",
-                  fit: BoxFit.fitHeight,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black12,
+        ),
+        borderRadius: BorderRadius.circular(
+          font18Px(context: context),
+        ),
+      ),
+      padding: EdgeInsets.all(
+        blockSizeHorizontal(context: context) * 2,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: blockSizeVertical(context: context) * 10),
+                  child: Image.network(
+                    "${ConstantData.productUrl}${widget.product.productImg}",
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: blockSizeHorizontal(context: context) * 35),
-                    child: ConstantWidgets().customText(
-                      value: widget.product.productName,
-                      fontSize: font15Px(context: context),
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      maxLines: 2,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: blockSizeHorizontal(context: context) * 3,
-                    ),
-                    child: ConstantWidgets().customText(
-                      value: 'In Stock : ${widget.product.quantity}',
-                      fontSize: font15Px(context: context),
-                      color: ConstantData.primaryColor,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ConstantWidgets().customText(
-                        value:
-                            "Rs ${double.parse(widget.product.newMrp) * (widget.product.cartQuantity!)}",
-                        fontSize: font18Px(context: context) * 1.1,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: blockSizeHorizontal(context: context) * 3,
+              const Spacer(),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ConstantWidgets().customText(
+                          value: widget.product.productName,
+                          fontSize: font15Px(context: context),
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          maxLines: 2,
                         ),
-                        child: CartItemButtons(
-                          maxQuantity: int.parse(widget.product.quantity),
-                          itemquantity: widget.product.cartQuantity!,
-                          callbackAdd: (() async {
-                            await pcontroller.plusToCart(
+                        const Spacer(),
+                        IconButton(
+                          onPressed: () {
+                            pcontroller.removeFromCart(
                                 model: widget.product, context: context);
-                          }),
-                          callbackSub: (() async {
-                            await pcontroller.minusToCart(
-                                model: widget.product, context: context);
-                          }),
-                          callbackVal: ((int n) async {
-                            await pcontroller.updateCartQunatity(
-                                model: widget.product,
-                                value: n.toString(),
-                                context: context);
-                          }),
+                          },
+                          icon: Icon(
+                            Icons.delete_outline_outlined,
+                            size: font22Px(context: context),
+                          ),
                         ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: blockSizeHorizontal(context: context) * 3,
                       ),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-      ],
+                      child: ConstantWidgets().customText(
+                        value: 'In Stock : ${widget.product.quantity}',
+                        fontSize: font15Px(context: context),
+                        color: ConstantData.primaryColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ConstantWidgets().customText(
+                          value:
+                              "Rs ${double.parse(widget.product.newMrp) * (widget.product.cartQuantity!)}",
+                          fontSize: font18Px(context: context) * 1.1,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal:
+                                blockSizeHorizontal(context: context) * 3,
+                          ),
+                          child: CartItemButtons(
+                            maxQuantity: int.parse(widget.product.quantity),
+                            itemquantity: widget.product.cartQuantity!,
+                            callbackAdd: (() async {
+                              await pcontroller.plusToCart(
+                                  model: widget.product, context: context);
+                            }),
+                            callbackSub: (() async {
+                              await pcontroller.minusToCart(
+                                  model: widget.product, context: context);
+                            }),
+                            callbackVal: ((int n) async {
+                              await pcontroller.updateCartQunatity(
+                                  model: widget.product,
+                                  value: n.toString(),
+                                  context: context);
+                            }),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:medrpha_trial/utils/size_config.dart';
 import 'package:medrpha_trial/utils/wigets.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
+//TODO: Check all alignments of Logo
 class ProductScreen extends StatelessWidget {
   ProductScreen({Key? key}) : super(key: key);
 
@@ -94,6 +95,7 @@ class ProductScreen extends StatelessWidget {
         ),
         children: [
           ///----------------------------------- Search bar --------------------------------------------
+
           InkWell(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -213,7 +215,7 @@ class ProductScreen extends StatelessWidget {
                 children: [
                   ConstantWidgets().customText(
                     value: 'Ethical',
-                    fontSize: font18Px(context: context) * 1.1,
+                    fontSize: font18Px(context: context),
                     color: ConstantData.mainTextColor,
                     fontWeight: FontWeight.w600,
                   ),

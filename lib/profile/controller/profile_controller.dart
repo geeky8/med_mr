@@ -21,12 +21,8 @@ class ProfileController extends GetxController {
 
   Future<void> getProfile() async {
     state.value = StoreState.LOADING;
-    if (kDebugMode) {
-      final storage = DataStorage();
-      print('progilr sess Id ------- ${storage.readSessId()}');
-    }
-    final value =
-        await repository.getProfile(sessId: DataStorage().readSessId());
+
+    final value = await repository.getProfile();
     if (value != null) {
       profileModel.value = value;
       state.value = StoreState.SUCCESS;

@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medrpha_trial/products/controller/product_controller.dart';
 import 'package:medrpha_trial/products/screens/product_screenA.dart';
 import 'package:medrpha_trial/users/screens/user_info_screen.dart';
 import 'package:medrpha_trial/users/screens/user_list_screen.dart';
@@ -127,9 +130,15 @@ class CompleteRegTile extends StatelessWidget {
                   color: ConstantData.primaryColor,
                 ),
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const ProductScreenA()));
+                  onPressed: () async {
+                    final productController = Get.put(ProductController());
+                    productController.firmId.value = userModel.firmId;
+                    await productController.init();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ProductScreenA(),
+                      ),
+                    );
                   },
                   child: Text(
                     "Order Now",

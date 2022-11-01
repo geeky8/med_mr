@@ -1,4 +1,4 @@
-/// [CategoriesType] for managing categories of products.
+/// [HomeState] for managing categories of products.
 // ignore_for_file: constant_identifier_names
 
 enum HomeState {
@@ -7,5 +7,4 @@ enum HomeState {
 
   ///[HomeState.SUCCESS] to show the required data.
   SUCCESS,
-
 }

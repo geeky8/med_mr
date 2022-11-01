@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:medrpha_trial/auth/screens/login_screen.dart';
 import 'package:medrpha_trial/bottom_navigation/screens/landing_screen.dart';
 import 'package:medrpha_trial/users/utils/success_failure_verification_screen.dart';
 
-void main() {
+Future<void> main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 

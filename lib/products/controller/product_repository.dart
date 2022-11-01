@@ -15,7 +15,7 @@ class ProductRepository {
 
   Future<List<CategoryModel>> getCategories() async {
     final catlist = <CategoryModel>[];
-        final sessId = DataStorage().readSessId();
+    final sessId = DataStorage().readSessId();
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
@@ -47,12 +47,12 @@ class ProductRepository {
     bool? refresh,
     String? term,
     int? pageIndex,
-    String? firmId,
+    required String firmId,
   }) async {
     final productlist = <ProductModel>[];
     final sessId = DataStorage().readSessId();
     final body = {
-      "firm_id": firmId ?? "",
+      "firm_id": firmId,
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
       "sessid": sessId,
@@ -90,12 +90,14 @@ class ProductRepository {
 
   Future<ProductModel> getProductDetails({
     required ProductModel model,
+    required String firmId,
     // required String sessId,
   }) async {
     final sessId = DataStorage().readSessId();
 
     final body = {
       "sessid": sessId,
+      // "firm_id":firmId,
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
       "pid": model.pid,
@@ -126,13 +128,14 @@ class ProductRepository {
     return currModel;
   }
 
-  Future<int?> plusTheCart({required ProductModel model}) async {
+  Future<int?> plusTheCart(
+      {required ProductModel model, required String firmId}) async {
     final sessId = DataStorage().readSessId();
-
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
+      "firm_id": firmId,
       "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -151,13 +154,14 @@ class ProductRepository {
     return null;
   }
 
-  Future<int?> minusTheCart({required ProductModel model}) async {
+  Future<int?> minusTheCart(
+      {required ProductModel model, required String firmId}) async {
     final sessId = DataStorage().readSessId();
-
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
+      "firm_id": firmId,
       "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -175,13 +179,14 @@ class ProductRepository {
     return null;
   }
 
-  Future<int?> updateQuantity({required ProductModel model}) async {
-        final sessId = DataStorage().readSessId();
-
+  Future<int?> updateQuantity(
+      {required ProductModel model, required String firmId}) async {
+    final sessId = DataStorage().readSessId();
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
+      "firm_id": firmId,
       "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -201,13 +206,14 @@ class ProductRepository {
     return null;
   }
 
-  Future<int?> addToCart({required ProductModel model}) async {
-        final sessId = DataStorage().readSessId();
-
+  Future<int?> addToCart(
+      {required ProductModel model, required String firmId}) async {
+    final sessId = DataStorage().readSessId();
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
+      "firm_id": firmId,
       "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId,
@@ -230,13 +236,14 @@ class ProductRepository {
     return null;
   }
 
-  Future<int?> removeFromCart({required ProductModel model}) async {
-        final sessId = DataStorage().readSessId();
-
+  Future<int?> removeFromCart(
+      {required ProductModel model, required String firmId}) async {
+    final sessId = DataStorage().readSessId();
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
+      "firm_id": firmId,
       "sessid": sessId,
       "pid": model.pid,
       "priceID": model.priceId
@@ -258,14 +265,14 @@ class ProductRepository {
     return null;
   }
 
-  Future<CartModel> getCart() async {
-        final sessId = DataStorage().readSessId();
-
+  Future<CartModel> getCart({required String firmId}) async {
+    final sessId = DataStorage().readSessId();
 
     final body = {
       //"sessid": "c9fc796d50917bf1",
       // "sessid": "34c4efad30e6e2d4",
-      "sessid": sessId,
+      "firm_id": firmId,
+      "sessid": sessId
     };
 
     final List<ProductModel> prodList = [];
@@ -298,5 +305,6 @@ class ProductRepository {
   }
 
   //------------------------Cart----------------------------------
+  //TODO: Add checkout (CartScreen - Checkout ---> checkout_screen - confirm_checkout ----> payment_screen - if(online)-paymentConfirmation else skip ----> success/failure message ----> back to product screen).
 
 }

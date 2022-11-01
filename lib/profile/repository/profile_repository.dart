@@ -8,8 +8,8 @@ import 'package:http/http.dart' as http;
 class ProfileRepository {
   final profileUrl = 'https://mrtest.medrpha.com/api/profile/profile';
 
-  Future<ProfileModel?> getProfile({String? sessId}) async {
-    print('---- $sessId');
+  Future<ProfileModel?> getProfile() async {
+    final sessId = DataStorage().readSessId();
     if (sessId != null) {
       final body = {"sessid": sessId};
 

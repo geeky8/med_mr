@@ -78,44 +78,47 @@ class SeachBar extends StatelessWidget {
     borderSide: BorderSide(
       color: Colors.grey.withOpacity(0.5),
     ),
-    borderRadius: BorderRadius.circular(30),
+    borderRadius: BorderRadius.circular(25),
   );
 
   final FocusNode fn = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      autofocus: autoFocus,
-      focusNode: fn,
-      onTap: () {
-        if (onTap != null) {
-          onTap!();
-        }
-        autoFocus ? fn.requestFocus() : fn.unfocus();
-      },
-      onChanged: ((value) {
-        if (onChange != null) {
-          onChange!(value);
-        }
-      }),
-      decoration: InputDecoration(
-        enabledBorder: myBorder,
-        border: myBorder,
-        focusedBorder: myBorder,
-        // focusedBorder: OutlineInputBorder(
-        //   borderSide: const BorderSide(
-        //     color: Colors.grey,
-        //     width: 2,
-        //   ),
-        //   borderRadius: BorderRadius.circular(30),
-        // ),
-        prefixIcon: Icon(
-          Icons.search,
-          color: ConstantData.secondaryColor,
+    return Container(
+      height: blockSizeVertical(context: context) * 7,
+      child: TextField(
+        autofocus: autoFocus,
+        focusNode: fn,
+        onTap: () {
+          if (onTap != null) {
+            onTap!();
+          }
+          autoFocus ? fn.requestFocus() : fn.unfocus();
+        },
+        onChanged: ((value) {
+          if (onChange != null) {
+            onChange!(value);
+          }
+        }),
+        decoration: InputDecoration(
+          enabledBorder: myBorder,
+          border: myBorder,
+          focusedBorder: myBorder,
+          // focusedBorder: OutlineInputBorder(
+          //   borderSide: const BorderSide(
+          //     color: Colors.grey,
+          //     width: 2,
+          //   ),
+          //   borderRadius: BorderRadius.circular(30),
+          // ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: ConstantData.secondaryColor,
+          ),
+          suffixIcon: trailingBtn(context),
+          hintText: "Search",
         ),
-        suffixIcon: trailingBtn(context),
-        hintText: "Search",
       ),
     );
   }

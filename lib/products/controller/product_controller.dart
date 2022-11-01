@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:medrpha_trial/enums/store_state.dart';
 import 'package:medrpha_trial/products/controller/product_repository.dart';
 import 'package:medrpha_trial/products/enums/home_state.dart';
 import 'package:medrpha_trial/products/models/category_model.dart';
@@ -57,6 +58,7 @@ class ProductController extends GetxController {
   }
 
   Future<void> init() async {
+    homeState.value = HomeState.LOADING;
     ethicalPageIndex.value = 1;
     generalPageIndex.value = 1;
     surgicalPageIndex.value = 1;
@@ -66,6 +68,7 @@ class ProductController extends GetxController {
     await getCategories();
     await _getProducts();
     await getCartItems();
+    homeState.value = HomeState.SUCCESS;
     productList
       ..clear()
       ..addAll(ethicalProductList);
@@ -93,10 +96,9 @@ class ProductController extends GetxController {
 
   Future<void> getEthicalProducts({bool? load}) async {
     final productRespModel = await ProductRepository().getProducts(
-      categoryId: '1',
-      pageIndex: ethicalPageIndex.value,
-      firmId: firmId.value.toString()
-    );
+        categoryId: '1',
+        pageIndex: ethicalPageIndex.value,
+        firmId: firmId.value.toString());
     // print(productRespModel!.message);
     if (productRespModel != null) {
       if (productRespModel.message ==
@@ -122,6 +124,7 @@ class ProductController extends GetxController {
     // final sessId = DataStorage().readSessId();
     final fetchModel = await ProductRepository().getProductDetails(
       model: model,
+      firmId: firmId.value,
       // sessId: "34c4efad30e6e2d4",
       // sessId: sessId,
     );
@@ -131,10 +134,9 @@ class ProductController extends GetxController {
   Future<void> getGenericProducts({bool? load}) async {
     // if (load == null) prodState = StoreState.LOADING;
     final productRespModel = await ProductRepository().getProducts(
-      categoryId: '2',
-      pageIndex: genericPageIndex.value,
-      firmId: firmId.value.toString()
-    );
+        categoryId: '2',
+        pageIndex: genericPageIndex.value,
+        firmId: firmId.value.toString());
     // print(productRespModel!.message);
     if (productRespModel != null) {
       if (productRespModel.message ==
@@ -159,11 +161,9 @@ class ProductController extends GetxController {
   Future<void> getSurgicalProducts({bool? load}) async {
     // if (load == null) prodState = StoreState.LOADING;
     final productRespModel = await ProductRepository().getProducts(
-      categoryId: '3',
-      pageIndex: surgicalPageIndex.value,
-      firmId: firmId.value.toString()
-
-    );
+        categoryId: '3',
+        pageIndex: surgicalPageIndex.value,
+        firmId: firmId.value.toString());
     // print(productRespModel!.message);
     if (productRespModel != null) {
       if (productRespModel.message ==
@@ -188,11 +188,9 @@ class ProductController extends GetxController {
   Future<void> getVeterinaryProducts({bool? load}) async {
     // if (load == null) prodState = StoreState.LOADING;
     final productRespModel = await ProductRepository().getProducts(
-      categoryId: '4',
-      pageIndex: vetPageIndex.value,
-      firmId: firmId.value.toString()
-
-    );
+        categoryId: '4',
+        pageIndex: vetPageIndex.value,
+        firmId: firmId.value.toString());
     // print(productRespModel!.message);
     if (productRespModel != null) {
       if (productRespModel.message ==
@@ -217,11 +215,9 @@ class ProductController extends GetxController {
   Future<void> getAyurvedicProducts({bool? load}) async {
     // if (load == null) prodState = StoreState.LOADING;
     final productRespModel = await ProductRepository().getProducts(
-      categoryId: '5',
-      pageIndex: ayurvedicPageIndex.value,
-      firmId: firmId.value.toString()
-
-    );
+        categoryId: '5',
+        pageIndex: ayurvedicPageIndex.value,
+        firmId: firmId.value.toString());
     // print(productRespModel!.message);
     if (productRespModel != null) {
       if (productRespModel.message ==
@@ -246,11 +242,9 @@ class ProductController extends GetxController {
   Future<void> getGenerallProducts({bool? load}) async {
     // if (load == null) prodState = StoreState.LOADING;
     final productRespModel = await ProductRepository().getProducts(
-      categoryId: '6',
-      pageIndex: generalPageIndex.value,
-      firmId: firmId.value.toString()
-
-    );
+        categoryId: '6',
+        pageIndex: generalPageIndex.value,
+        firmId: firmId.value.toString());
     // print(productRespModel!.message);
     if (productRespModel != null) {
       if (productRespModel.message ==
@@ -278,7 +272,7 @@ class ProductController extends GetxController {
     bool? isRemove,
     bool? cartOpt,
   }) async {
-    final model = await ProductRepository().getCart();
+    final model = await ProductRepository().getCart(firmId: firmId.value);
     if (isRemove != null) {
       cartModel.value = cartModel.value.copyWith(
         totalSalePrice: model.totalSalePrice,
@@ -433,7 +427,8 @@ class ProductController extends GetxController {
 
       await _updateProductsAccordingToCart(model: currModel);
 
-      ProductRepository().updateQuantity(model: currModel);
+      ProductRepository()
+          .updateQuantity(model: currModel, firmId: firmId.value);
 
       snackBar = ConstantWidgets()
           .customSnackBar(text: 'Qunatity updated', context: context);
@@ -489,7 +484,8 @@ class ProductController extends GetxController {
 
         await _updateProductsAccordingToCart(model: currModel);
 
-        final value = ProductRepository().plusTheCart(model: currModel);
+        final value = ProductRepository()
+            .plusTheCart(model: currModel, firmId: firmId.value);
         SnackBar snackBar;
         if (value == null) {
           snackBar = ConstantWidgets().customSnackBar(
@@ -535,7 +531,8 @@ class ProductController extends GetxController {
 
       await _updateProductsAccordingToCart(model: currModel);
 
-      final value = ProductRepository().minusTheCart(model: currModel);
+      final value = ProductRepository()
+          .minusTheCart(model: currModel, firmId: firmId.value);
       if (value == null) {
         snackBar = ConstantWidgets().customSnackBar(
           text: 'Failed to update the cart',
@@ -584,7 +581,7 @@ class ProductController extends GetxController {
       cartModel.value.productList.add(currModel);
       await _updateProductsAccordingToCart(model: currModel);
 
-      ProductRepository().addToCart(model: currModel);
+      ProductRepository().addToCart(model: currModel, firmId: firmId.value);
       // await getCartItems();
       print(cartModel.value.totalSalePrice);
       stopWatch.stop();
@@ -620,7 +617,8 @@ class ProductController extends GetxController {
 
     // await getCartItems(isRemove: true);
     if (index != -1) {
-      final value = ProductRepository().removeFromCart(model: model);
+      final value = ProductRepository()
+          .removeFromCart(model: model, firmId: firmId.value);
       SnackBar snackBar;
       if (value != null) {
         snackBar = ConstantWidgets().customSnackBar(
@@ -650,11 +648,9 @@ class ProductController extends GetxController {
       // if (load == null) searchState = StoreState.LOADING;
       Future.delayed(Duration.zero, () async {
         final productRespModel = await ProductRepository().getProducts(
-          term: term,
-          pageIndex: searchIndex.value,
-      firmId: firmId.value.toString()
-
-        );
+            term: term,
+            pageIndex: searchIndex.value,
+            firmId: firmId.value.toString());
         if (productRespModel != null) {
           if (productRespModel.message == 'successful !!') {
             if (productRespModel.productList.isNotEmpty) {

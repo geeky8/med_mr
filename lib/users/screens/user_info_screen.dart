@@ -165,6 +165,17 @@ class UserInfoScreen extends StatelessWidget {
                           height: blockSizeVertical(context: context) * 2,
                         ),
                         InfoTiles(
+                          label: 'Drug License Number',
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          text: userModel.dlNumber,
+                        ),
+                        SizedBox(
+                          height: blockSizeVertical(context: context) * 2,
+                        ),
+                        SizedBox(
+                          height: blockSizeVertical(context: context) * 2,
+                        ),
+                        InfoTiles(
                           label: 'Validity',
                           crossAxisAlignment: CrossAxisAlignment.center,
                           text: userModel.dlValidity,

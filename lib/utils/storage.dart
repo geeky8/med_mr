@@ -18,8 +18,8 @@ class DataStorage {
     return store.read(sessId);
   }
 
-  void writeSessId({required String value}) {
-    store.write(sessId, value);
+  void writeSessId({required String value}) async {
+    await store.write(sessId, value);
   }
 
   String? reademrType() {

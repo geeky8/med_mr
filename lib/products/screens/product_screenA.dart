@@ -42,6 +42,7 @@ class _ProductScreenAState extends State<ProductScreenA> {
       backgroundColor: ConstantData.bgColor,
       appBar: AppBar(
         elevation: 0,
+        centerTitle: true,
         title: SizedBox(
           height: getScreenPercentSize(context, 6),
           width: getWidthPercentSize(context, 35),
@@ -120,8 +121,14 @@ class _ProductScreenAState extends State<ProductScreenA> {
               onTap: () {
                 pcontroller.searchList.clear();
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SeachScreen()));
+                  MaterialPageRoute(
+                    builder: (context) => SeachScreen(),
+                  ),
+                );
               },
+            ),
+            SizedBox(
+              height: blockSizeVertical(context: context) * 2,
             ),
             Obx(() {
               return dropDownSelection(context);
@@ -152,7 +159,10 @@ class _ProductScreenAState extends State<ProductScreenA> {
 
                 case HomeState.LOADING:
                   return const Expanded(
-                      child: Center(child: CircularProgressIndicator()));
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
                 case HomeState.SUCCESS:
                   return Flexible(
                     child: productItem.isEmpty
@@ -201,20 +211,23 @@ class _ProductScreenAState extends State<ProductScreenA> {
   Widget dropDownSelection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: blockSizeHorizontal(context: context) * 2,
-          vertical: blockSizeHorizontal(context: context) * 3.5),
+        horizontal: blockSizeHorizontal(context: context) * 2,
+        vertical: blockSizeVertical(context: context) * 2,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ConstantWidgets().customText(
             value: pcontroller.currCategory.value.categoryString(),
-            fontSize: font18Px(context: context) * 1.2,
+            fontSize: font18Px(context: context) * 1.1,
             color: Colors.black,
             fontWeight: FontWeight.w600,
           ),
           Container(
             padding: EdgeInsets.symmetric(
-                horizontal: blockSizeHorizontal(context: context)),
+              horizontal: blockSizeHorizontal(context: context) * 2,
+              vertical: blockSizeVertical(context: context),
+            ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: Colors.grey.withOpacity(0.6)),
@@ -224,6 +237,11 @@ class _ProductScreenAState extends State<ProductScreenA> {
                 isDense: true,
                 elevation: 2,
                 borderRadius: BorderRadius.circular(12),
+                style: TextStyle(
+                  fontSize: font18Px(context: context),
+                  fontFamily: ConstantData.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
                 value: pcontroller.currCategory.value.categoryString(),
                 icon: Icon(
                   Icons.keyboard_arrow_down,
@@ -234,9 +252,9 @@ class _ProductScreenAState extends State<ProductScreenA> {
                     value: items.categoryName,
                     child: ConstantWidgets().customText(
                       value: items.categoryName,
-                      fontSize: font12Px(context: context),
+                      fontSize: font15Px(context: context),
                       color: Colors.black,
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.w500,
                     ),
                   );
                 }).toList(),
@@ -257,9 +275,7 @@ class _ProductScreenAState extends State<ProductScreenA> {
 class ProductTile extends StatelessWidget {
   final ProductModel product;
   final ProductController pcontroller = Get.find();
-  ProductTile(
-      {required this.product, Key? key})
-      : super(key: key);
+  ProductTile({required this.product, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(

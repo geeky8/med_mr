@@ -63,8 +63,8 @@ class AuthController extends GetxController {
       }
 
       state.value = StoreState.SUCCESS;
-      final pcontroller = Get.put(ProductController());
-      pcontroller.init();
+      // final pcontroller = Get.put(ProductController());
+      // pcontroller.init();
 
       Navigator.pushReplacement(
         context,

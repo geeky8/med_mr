@@ -6,7 +6,9 @@ import 'package:medrpha_trial/enums/inital_registeration.dart';
 import 'package:medrpha_trial/enums/mr_type.dart';
 import 'package:medrpha_trial/enums/user_status.dart';
 import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/enums/home_state.dart';
 import 'package:medrpha_trial/products/screens/product_screen.dart';
+import 'package:medrpha_trial/products/screens/product_screenA.dart';
 import 'package:medrpha_trial/users/controller/users_mr_controller.dart';
 import 'package:medrpha_trial/users/models/mr_model.dart';
 import 'package:medrpha_trial/users/models/user_model.dart';
@@ -44,6 +46,7 @@ class UserListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<UserMRController>();
+    final productController = Get.put(ProductController());
     final mrType = mrTypefromValue(type: DataStorage().reademrType() ?? '2');
     return Scaffold(
       appBar: ConstantWidgets().customAppBar(
@@ -58,13 +61,6 @@ class UserListScreen extends StatelessWidget {
               builder: (context) => const CreateAccount(),
             ),
           );
-          // await controller.getCountry();
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (_) => const RegisterEditInfoScreen(),
-          //   ),
-          // );
         },
         backgroundColor: ConstantData.primaryColor,
         child: Icon(
@@ -73,131 +69,131 @@ class UserListScreen extends StatelessWidget {
           color: ConstantData.bgColor,
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: blockSizeHorizontal(context: context) * 4,
-          vertical: blockSizeVertical(context: context) * 2,
-        ),
-        child: Obx(() {
-          List<UserModel> usersList = <UserModel>[];
-          switch (controller.usersStatus.value) {
-            // case UserStatus.ALL:
-            // case UserStatus.APPROVED:
-            //   usersList = getTileList(
-            //     list: controller.usersList,
-            //     status: UserStatus.APPROVED,
-            //   );
-            //   break;
-            // case UserStatus.NOT_APPROVED:
-            //   usersList = getTileList(
-            //     list: controller.usersList,
-            //     status: UserStatus.NOT_APPROVED,
-            //   );
-            //   break;
-            case RegisterationStatus.INITAL:
-              usersList
-                ..clear()
-                ..addAll(controller.initalUsersList);
-              break;
-            case RegisterationStatus.NON:
-              usersList
-                ..clear()
-                ..addAll(controller.nonRegUsersList);
-              break;
-            case RegisterationStatus.COMPLETE:
-              usersList
-                ..clear()
-                ..addAll(controller.usersList);
-              break;
-            case RegisterationStatus.LINK:
-              break;
-          }
-          return Column(
-            children: [
-              if (mrTypefromValue(type: DataStorage().mrtype) ==
-                  MRType.EXECUTIVE)
-                Row(
+      body: Obx(
+        () => Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: blockSizeHorizontal(context: context) * 4,
+                vertical: blockSizeVertical(context: context) * 2,
+              ),
+              child: Obx(() {
+                List<UserModel> usersList = <UserModel>[];
+                switch (controller.usersStatus.value) {
+                  case RegisterationStatus.INITAL:
+                    usersList
+                      ..clear()
+                      ..addAll(controller.initalUsersList);
+                    break;
+                  case RegisterationStatus.NON:
+                    usersList
+                      ..clear()
+                      ..addAll(controller.nonRegUsersList);
+                    break;
+                  case RegisterationStatus.COMPLETE:
+                    usersList
+                      ..clear()
+                      ..addAll(controller.usersList);
+                    break;
+                  case RegisterationStatus.LINK:
+                    break;
+                }
+                return Column(
                   children: [
-                    Expanded(
-                      flex: 2,
-                      child: ChipTile(
-                        label: 'Non-Registred',
-                        func: () {
-                          controller.usersStatus.value =
-                              RegisterationStatus.NON;
-                        },
-                        color: (controller.usersStatus.value ==
-                                RegisterationStatus.NON
-                            ? ConstantData.primaryColor
-                            : null),
+                    if (mrTypefromValue(type: DataStorage().mrtype) ==
+                        MRType.EXECUTIVE)
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: ChipTile(
+                              label: 'Non-Registred',
+                              func: () {
+                                controller.usersStatus.value =
+                                    RegisterationStatus.NON;
+                              },
+                              color: (controller.usersStatus.value ==
+                                      RegisterationStatus.NON
+                                  ? ConstantData.primaryColor
+                                  : null),
+                            ),
+                          ),
+                          SizedBox(
+                            width: blockSizeHorizontal(context: context) * 4,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: ChipTile(
+                              label: 'Step-1 Completed',
+                              func: () {
+                                controller.usersStatus.value =
+                                    RegisterationStatus.INITAL;
+                              },
+                              color: (controller.usersStatus.value ==
+                                      RegisterationStatus.INITAL
+                                  ? ConstantData.primaryColor
+                                  : null),
+                            ),
+                          ),
+                          SizedBox(
+                            width: blockSizeHorizontal(context: context) * 4,
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: ChipTile(
+                              label: 'Completed',
+                              func: () {
+                                controller.usersStatus.value =
+                                    RegisterationStatus.COMPLETE;
+                              },
+                              color: (controller.usersStatus.value ==
+                                      RegisterationStatus.COMPLETE
+                                  ? ConstantData.primaryColor
+                                  : null),
+                            ),
+                          ),
+                          // const Spacer(),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: blockSizeHorizontal(context: context) * 4,
-                    ),
                     Expanded(
-                      flex: 2,
-                      child: ChipTile(
-                        label: 'Step-1 Completed',
-                        func: () {
-                          controller.usersStatus.value =
-                              RegisterationStatus.INITAL;
-                        },
-                        color: (controller.usersStatus.value ==
-                                RegisterationStatus.INITAL
-                            ? ConstantData.primaryColor
-                            : null),
+                      child: ListView.builder(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: blockSizeHorizontal(context: context) * 2,
+                          vertical: blockSizeVertical(context: context) * 3,
+                        ),
+                        itemCount: (mrType == MRType.EXECUTIVE)
+                            ? usersList.length
+                            : controller.mrList.length,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (mrType == MRType.EXECUTIVE)
+                            ? (_, index) {
+                                // return FirmInfoTile(
+                                //   userModel: usersList[index],
+                                // );
+                                return AmanFirmInfoTile(
+                                  userModel: usersList[index],
+                                );
+                              }
+                            : (_, index) {
+                                return MRInfoTile(
+                                  mrModel: controller.mrList[index],
+                                );
+                              },
                       ),
-                    ),
-                    SizedBox(
-                      width: blockSizeHorizontal(context: context) * 4,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: ChipTile(
-                        label: 'Completed',
-                        func: () {
-                          controller.usersStatus.value =
-                              RegisterationStatus.COMPLETE;
-                        },
-                        color: (controller.usersStatus.value ==
-                                RegisterationStatus.COMPLETE
-                            ? ConstantData.primaryColor
-                            : null),
-                      ),
-                    ),
-                    // const Spacer(),
+                    )
                   ],
-                ),
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: blockSizeHorizontal(context: context) * 2,
-                    vertical: blockSizeVertical(context: context) * 3,
-                  ),
-                  itemCount: (mrType == MRType.EXECUTIVE)
-                      ? usersList.length
-                      : controller.mrList.length,
-                  physics: const BouncingScrollPhysics(),
-                  itemBuilder: (mrType == MRType.EXECUTIVE)
-                      ? (_, index) {
-                          // return FirmInfoTile(
-                          //   userModel: usersList[index],
-                          // );
-                          return AmanFirmInfoTile(
-                            userModel: usersList[index],
-                          );
-                        }
-                      : (_, index) {
-                          return MRInfoTile(
-                            mrModel: controller.mrList[index],
-                          );
-                        },
-                ),
+                );
+              }),
+            ),
+            if (productController.homeState.value == HomeState.LOADING)
+              Container(
+                decoration: BoxDecoration(
+                    color: ConstantData.clrBorder.withOpacity(0.5)),
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator(),
               )
-            ],
-          );
-        }),
+          ],
+        ),
       ),
     );
   }
@@ -441,14 +437,6 @@ class AmanFirmInfoTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Text(
-              //   userModel.phoneNo,
-              //   style: TextStyle(
-              //     color: ConstantData.mainTextColor,
-              //     fontSize: font18Px(context: context) * 1.1,
-              //     fontWeight: FontWeight.w500,
-              //   ),
-              // ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -475,7 +463,7 @@ class AmanFirmInfoTile extends StatelessWidget {
                         RegisterationStatus.COMPLETE &&
                     userModel.status != 'Approved'),
                 child: InkWell(
-                  onTap: () {
+                  onTap: () async {
                     switch (userModel.registerationStatus) {
                       case RegisterationStatus.INITAL:
                         Navigator.push(
@@ -489,12 +477,13 @@ class AmanFirmInfoTile extends StatelessWidget {
 
                         break;
                       case RegisterationStatus.COMPLETE:
-                        final productController = Get.put(ProductController());
+                        final productController = Get.find<ProductController>();
                         productController.firmId.value = userModel.firmId;
+                        await productController.init();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => ProductScreen(),
+                            builder: (_) => const ProductScreenA(),
                           ),
                         );
                         break;
