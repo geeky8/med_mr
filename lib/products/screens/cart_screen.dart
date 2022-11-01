@@ -69,7 +69,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      text: "Checkout",
+                      text: "Continue",
                     )
                   : const SizedBox();
             }),
