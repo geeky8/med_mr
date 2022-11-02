@@ -63,7 +63,7 @@ class CartScreen extends StatelessWidget {
               return pcontroller.cartModel.value.productList.isNotEmpty
                   ? BottomButton(
                       onTap: () {
-                        Navigator.of(context).push(
+                        Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => CheckoutScreen(),
                           ),

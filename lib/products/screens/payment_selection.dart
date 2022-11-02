@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/enums/home_state.dart';
+import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/paymentsuccess.dart';
 import 'package:medrpha_trial/products/utils/bottombtn.dart';
 import 'package:medrpha_trial/utils/size_config.dart';
@@ -39,85 +43,109 @@ class _PaymentSelectionState extends State<PaymentSelection> {
         context: context,
         centerTitle: true,
       ),
-      body: Container(
-        color: ConstantData.bgColor,
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  EdgeInsets.all(blockSizeHorizontal(context: context) * 7),
+      body: Obx(() {
+        switch (pcontroller.checkoutState.value) {
+          case HomeState.LOADING:
+            return const Center(child: CircularProgressIndicator());
+          case HomeState.SUCCESS:
+            return Container(
+              color: ConstantData.bgColor,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ConstantWidgets().customText(
-                        value:
-                            "${pcontroller.cartModel.value.productList.length} item in the cart",
-                        fontSize: font18Px(context: context),
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w300,
-                      ),
-                      Column(
-                        children: [
-                          ConstantWidgets().customText(
-                            value: "Total",
-                            fontSize: font18Px(context: context),
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w300,
-                          ),
-                          ConstantWidgets().customText(
-                            value:
-                                "Rs ${pcontroller.cartModel.value.totalSalePrice}",
-                            fontSize: font18Px(context: context) * 1.1,
+                  Padding(
+                    padding: EdgeInsets.all(
+                        blockSizeHorizontal(context: context) * 7),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ConstantWidgets().customText(
+                              value:
+                                  "${pcontroller.cartModel.value.productList.length} item in the cart",
+                              fontSize: font18Px(context: context),
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            Column(
+                              children: [
+                                ConstantWidgets().customText(
+                                  value: "Total",
+                                  fontSize: font18Px(context: context),
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                ConstantWidgets().customText(
+                                  value:
+                                      "Rs ${pcontroller.cartModel.value.totalSalePrice}",
+                                  fontSize: font18Px(context: context) * 1.1,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical:
+                                  blockSizeHorizontal(context: context) * 5),
+                          child: ConstantWidgets().customText(
+                            value: "Payment Options",
+                            fontSize: font18Px(context: context) * 1.2,
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        vertical: blockSizeHorizontal(context: context) * 5),
-                    child: ConstantWidgets().customText(
-                      value: "Payment Options",
-                      fontSize: font18Px(context: context) * 1.2,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7),
-                      border: Border.all(color: Colors.black.withOpacity(0.3)),
-                    ),
-                    child: Column(
-                      children: [
-                        paymentOptionTile(
-                            context, paymentOptions[0], "online_payment.png"),
-                        paymentOptionTile(
-                            context, paymentOptions[1], "pay_on_delivery.png"),
-                        paymentOptionTile(
-                            context, paymentOptions[2], "pay_later.png"),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.3)),
+                          ),
+                          child: Column(
+                            children: [
+                              paymentOptionTile(context, paymentOptions[0],
+                                  "online_payment.png"),
+                              paymentOptionTile(context, paymentOptions[1],
+                                  "pay_on_delivery.png"),
+                              paymentOptionTile(
+                                  context, paymentOptions[2], "pay_later.png"),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
+                  const Expanded(child: SizedBox()),
+                  BottomButton(
+                    onTap: () async {
+                      final orderId = await pcontroller.confirmCheckout();
+                      if (orderId.isNotEmpty) {
+                        pcontroller.cartModel.value.copyWith(
+                          totalSalePrice: "0.0",
+                          noOfProducts: 0,
+                          productList: <ProductModel>[],
+                        );
+                        pcontroller.getProducts();
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const PaymentSuccess()));
+                      } else {
+                        final snackBar = ConstantWidgets().customSnackBar(
+                          text: 'Something went wrong',
+                          context: context,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    },
+                    text: "Checkout",
+                  ),
                 ],
               ),
-            ),
-            const Expanded(child: SizedBox()),
-            BottomButton(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const PaymentSuccess()));
-              },
-              text: "Proceed",
-            ),
-          ],
-        ),
-      ),
+            );
+        }
+      }),
     );
   }
 

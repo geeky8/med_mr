@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:medrpha_trial/products/utils/urls.dart';
 import 'package:medrpha_trial/utils/storage.dart';
 
+import '../../enums/payment_options.dart';
 import '../models/cart_model.dart';
 import '../models/category_model.dart';
 import '../models/product_model.dart';
@@ -304,7 +305,39 @@ class ProductRepository {
         totalSalePrice: total, noOfProducts: count, productList: prodList);
   }
 
-  //------------------------Cart----------------------------------
+  //------------------------Checkout----------------------------------
+  Future<String> checkoutConfirm({
+    // required PaymentOptions paymentOptionsType,
+    required String firmId,
+    required String finalPrice,
+  }) async {
+    final sessId = DataStorage().readSessId();
+    final body = {
+      "firm_id": firmId,
+      "sessid": sessId,
+      "paylater": "0",
+      "paymode": "1",
+      // "paymode": paymentOptionsType.toPaymentOption(),
+      // "final": "2000.00",
+      "final": finalPrice,
+    };
+
+    String confirm = '';
+    final resp =
+        await _httpClient.post(Uri.parse(Urls.checkoutUrl), body: body);
+    if (kDebugMode) {
+      print('---------- Confirm checkout ---------- ${resp.body}');
+    }
+    print(resp);
+    if (resp.statusCode == 200) {
+      final respBody = jsonDecode(resp.body) as Map<String, dynamic>;
+      print(respBody);
+      if (respBody['status'] == '1') {
+        confirm = respBody['order_id'] as String;
+      }
+    }
+    return confirm;
+  }
   //TODO: Add checkout (CartScreen - Checkout ---> checkout_screen - confirm_checkout ----> payment_screen - if(online)-paymentConfirmation else skip ----> success/failure message ----> back to product screen).
 
 }
