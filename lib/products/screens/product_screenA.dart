@@ -42,6 +42,12 @@ class _ProductScreenAState extends State<ProductScreenA> {
       backgroundColor: ConstantData.bgColor,
       appBar: AppBar(
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back,color: Colors.black,),
+        ),
         centerTitle: true,
         title: SizedBox(
           height: getScreenPercentSize(context, 6),

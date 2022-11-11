@@ -37,7 +37,9 @@ class DashBoardScreenA extends StatelessWidget {
           child: ListView(
             physics: const BouncingScrollPhysics(),
             children: [
-              SeachBar(),
+              SeachBar(
+                normal: true,
+              ),
               space(context),
               const Performace(
                 sales: 720,
@@ -73,7 +75,8 @@ class SeachBar extends StatelessWidget {
   final Function(String a)? onChange;
   final Function()? onTap;
   final bool autoFocus;
-  SeachBar({this.autoFocus = false, this.onTap, this.onChange, super.key});
+  final bool normal;
+  SeachBar({this.normal=false,this.autoFocus = false, this.onTap, this.onChange, super.key});
   final InputBorder myBorder = OutlineInputBorder(
     borderSide: BorderSide(
       color: Colors.grey.withOpacity(0.5),
@@ -85,7 +88,7 @@ class SeachBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: blockSizeVertical(context: context) * 7,
       child: TextField(
         autofocus: autoFocus,
@@ -94,7 +97,7 @@ class SeachBar extends StatelessWidget {
           if (onTap != null) {
             onTap!();
           }
-          autoFocus ? fn.requestFocus() : fn.unfocus();
+          autoFocus || normal ? fn.requestFocus() : fn.unfocus();
         },
         onChanged: ((value) {
           if (onChange != null) {
@@ -116,37 +119,9 @@ class SeachBar extends StatelessWidget {
             Icons.search,
             color: ConstantData.secondaryColor,
           ),
-          suffixIcon: trailingBtn(context),
           hintText: "Search",
         ),
       ),
-    );
-  }
-
-  Widget trailingBtn(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          visualDensity: VisualDensity.compact,
-          onPressed: () {},
-          icon: Icon(
-            Icons.mic_none_outlined,
-            color: ConstantData.secondaryColor,
-          ),
-        ),
-        IconButton(
-          visualDensity: VisualDensity.compact,
-          onPressed: () {},
-          icon: Icon(
-            Icons.camera_alt_outlined,
-            color: ConstantData.secondaryColor,
-          ),
-        ),
-        SizedBox(
-          width: blockSizeHorizontal(context: context) * 3,
-        ),
-      ],
     );
   }
 }

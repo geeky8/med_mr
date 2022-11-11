@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/controller/product_repository.dart';
 import 'package:medrpha_trial/products/enums/home_state.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/paymentsuccess.dart';
@@ -132,11 +133,11 @@ class _PaymentSelectionState extends State<PaymentSelection> {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => const PaymentSuccess()));
                       } else {
-                        final snackBar = ConstantWidgets().customSnackBar(
-                          text: 'Something went wrong',
-                          context: context,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        // final snackBar = ConstantWidgets().customSnackBar(
+                        //   text: 'Something went wrong',
+                        //   context: context,
+                        // );
+                        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       }
                     },
                     text: "Checkout",

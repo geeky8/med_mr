@@ -95,16 +95,17 @@ class CheckoutScreen extends StatelessWidget {
               ),
             ),
             BottomButton(
-                onTap: () {
-                  pcontroller.cartModel.value = pcontroller.cartModel.value
-                      .copyWith(totalSalePrice: totalPrize.toString());
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const PaymentSelection(),
-                    ),
-                  );
-                },
-                text: "Confirm"),
+              onTap: () {
+                pcontroller.cartModel.value = pcontroller.cartModel.value
+                    .copyWith(totalSalePrice: totalPrize.toString());
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const PaymentSelection(),
+                  ),
+                );
+              },
+              text: "Confirm",
+            ),
           ],
         ),
       ),

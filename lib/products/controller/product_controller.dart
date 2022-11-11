@@ -60,6 +60,11 @@ class ProductController extends GetxController {
   }
 
   Future<void> init() async {
+    cartModel.value = CartModel(
+      totalSalePrice: '0.0',
+      noOfProducts: 0,
+      productList: [],
+    );
     homeState.value = HomeState.LOADING;
     ethicalPageIndex.value = 1;
     generalPageIndex.value = 1;
@@ -282,7 +287,8 @@ class ProductController extends GetxController {
       );
     } else {
       // cartModel = model;
-      cartModel.value.copyWith(productList: model.productList);
+      cartModel.value =
+          cartModel.value.copyWith(productList: model.productList);
       final list = <ProductModel>[];
       if (cartOpt != null) {
         for (final i in model.productList) {

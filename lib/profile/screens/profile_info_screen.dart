@@ -16,8 +16,11 @@ class ProfileInfoScreen extends StatelessWidget {
     final profileController = Get.find<ProfileController>();
 
     return Scaffold(
-      appBar:
-          ConstantWidgets().customAppBar(title: 'Profile', context: context),
+      appBar: ConstantWidgets().customAppBar(
+        title: 'Profile',
+        leading: Container(),
+        context: context,
+      ),
       body: Obx(
         () => Padding(
           padding: EdgeInsets.symmetric(

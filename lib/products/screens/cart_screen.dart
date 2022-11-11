@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medrpha_trial/products/controller/product_controller.dart';
+import 'package:medrpha_trial/products/enums/home_state.dart';
 import 'package:medrpha_trial/products/models/cart_model.dart';
 import 'package:medrpha_trial/products/models/product_model.dart';
 import 'package:medrpha_trial/products/screens/checkout.dart';
@@ -31,6 +32,11 @@ class CartScreen extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 cart = pcontroller.cartModel.value;
+                if (pcontroller.homeState.value==HomeState.LOADING) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
                 if (cart.productList.isEmpty) {
                   return const Center(
                     child: Text("Cart is empty"),

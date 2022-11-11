@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:medrpha_trial/products/utils/urls.dart';
 import 'package:medrpha_trial/utils/storage.dart';
@@ -293,7 +294,7 @@ class ProductRepository {
         final list = respBody['data'] as List<dynamic>;
         count = int.parse(respBody['count'] as String);
         total = (respBody['final'] as String);
-        for (final i in list) {
+        for (var i in list) {
           final model = ProductModel.fromJson(
             json: i,
           );
@@ -328,12 +329,12 @@ class ProductRepository {
     if (kDebugMode) {
       print('---------- Confirm checkout ---------- ${resp.body}');
     }
-    print(resp);
     if (resp.statusCode == 200) {
       final respBody = jsonDecode(resp.body) as Map<String, dynamic>;
-      print(respBody);
       if (respBody['status'] == '1') {
         confirm = respBody['order_id'] as String;
+      } else {
+        Fluttertoast.showToast(msg: respBody['message']);
       }
     }
     return confirm;

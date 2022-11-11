@@ -50,6 +50,7 @@ class UserListScreen extends StatelessWidget {
     final mrType = mrTypefromValue(type: DataStorage().reademrType() ?? '2');
     return Scaffold(
       appBar: ConstantWidgets().customAppBar(
+        leading: Container(),
         title: 'User List',
         context: context,
       ),
@@ -69,8 +70,7 @@ class UserListScreen extends StatelessWidget {
           color: ConstantData.bgColor,
         ),
       ),
-      body: Obx(
-        () => Stack(
+      body: Stack(
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
@@ -185,16 +185,141 @@ class UserListScreen extends StatelessWidget {
                 );
               }),
             ),
-            if (productController.homeState.value == HomeState.LOADING)
-              Container(
-                decoration: BoxDecoration(
-                    color: ConstantData.clrBorder.withOpacity(0.5)),
-                alignment: Alignment.center,
-                child: const CircularProgressIndicator(),
-              )
+            // if (productController.homeState.value == HomeState.LOADING)
+            //   Container(
+            //     decoration: BoxDecoration(
+            //         color: ConstantData.clrBorder.withOpacity(0.5)),
+            //     alignment: Alignment.center,
+            //     child: const CircularProgressIndicator(),
+            //   )
           ],
         ),
-      ),
+      // body: Obx(
+      //   () => Stack(
+      //     children: [
+      //       Padding(
+      //         padding: EdgeInsets.symmetric(
+      //           horizontal: blockSizeHorizontal(context: context) * 4,
+      //           vertical: blockSizeVertical(context: context) * 2,
+      //         ),
+      //         child: Obx(() {
+      //           List<UserModel> usersList = <UserModel>[];
+      //           switch (controller.usersStatus.value) {
+      //             case RegisterationStatus.INITAL:
+      //               usersList
+      //                 ..clear()
+      //                 ..addAll(controller.initalUsersList);
+      //               break;
+      //             case RegisterationStatus.NON:
+      //               usersList
+      //                 ..clear()
+      //                 ..addAll(controller.nonRegUsersList);
+      //               break;
+      //             case RegisterationStatus.COMPLETE:
+      //               usersList
+      //                 ..clear()
+      //                 ..addAll(controller.usersList);
+      //               break;
+      //             case RegisterationStatus.LINK:
+      //               break;
+      //           }
+      //           return Column(
+      //             children: [
+      //               if (mrTypefromValue(type: DataStorage().mrtype) ==
+      //                   MRType.EXECUTIVE)
+      //                 Row(
+      //                   children: [
+      //                     Expanded(
+      //                       flex: 2,
+      //                       child: ChipTile(
+      //                         label: 'Non-Registred',
+      //                         func: () {
+      //                           controller.usersStatus.value =
+      //                               RegisterationStatus.NON;
+      //                         },
+      //                         color: (controller.usersStatus.value ==
+      //                                 RegisterationStatus.NON
+      //                             ? ConstantData.primaryColor
+      //                             : null),
+      //                       ),
+      //                     ),
+      //                     SizedBox(
+      //                       width: blockSizeHorizontal(context: context) * 4,
+      //                     ),
+      //                     Expanded(
+      //                       flex: 2,
+      //                       child: ChipTile(
+      //                         label: 'Step-1 Completed',
+      //                         func: () {
+      //                           controller.usersStatus.value =
+      //                               RegisterationStatus.INITAL;
+      //                         },
+      //                         color: (controller.usersStatus.value ==
+      //                                 RegisterationStatus.INITAL
+      //                             ? ConstantData.primaryColor
+      //                             : null),
+      //                       ),
+      //                     ),
+      //                     SizedBox(
+      //                       width: blockSizeHorizontal(context: context) * 4,
+      //                     ),
+      //                     Expanded(
+      //                       flex: 2,
+      //                       child: ChipTile(
+      //                         label: 'Completed',
+      //                         func: () {
+      //                           controller.usersStatus.value =
+      //                               RegisterationStatus.COMPLETE;
+      //                         },
+      //                         color: (controller.usersStatus.value ==
+      //                                 RegisterationStatus.COMPLETE
+      //                             ? ConstantData.primaryColor
+      //                             : null),
+      //                       ),
+      //                     ),
+      //                     // const Spacer(),
+      //                   ],
+      //                 ),
+      //               Expanded(
+      //                 child: ListView.builder(
+      //                   padding: EdgeInsets.symmetric(
+      //                     horizontal: blockSizeHorizontal(context: context) * 2,
+      //                     vertical: blockSizeVertical(context: context) * 3,
+      //                   ),
+      //                   itemCount: (mrType == MRType.EXECUTIVE)
+      //                       ? usersList.length
+      //                       : controller.mrList.length,
+      //                   physics: const BouncingScrollPhysics(),
+      //                   itemBuilder: (mrType == MRType.EXECUTIVE)
+      //                       ? (_, index) {
+      //                           // return FirmInfoTile(
+      //                           //   userModel: usersList[index],
+      //                           // );
+      //                           return AmanFirmInfoTile(
+      //                             userModel: usersList[index],
+      //                           );
+      //                         }
+      //                       : (_, index) {
+      //                           return MRInfoTile(
+      //                             mrModel: controller.mrList[index],
+      //                           );
+      //                         },
+      //                 ),
+      //               )
+      //             ],
+      //           );
+      //         }),
+      //       ),
+      //       if (productController.homeState.value == HomeState.LOADING)
+      //         Container(
+      //           decoration: BoxDecoration(
+      //               color: ConstantData.clrBorder.withOpacity(0.5)),
+      //           alignment: Alignment.center,
+      //           child: const CircularProgressIndicator(),
+      //         )
+      //     ],
+      //   ),
+      // ),
     );
   }
 }
@@ -479,13 +604,13 @@ class AmanFirmInfoTile extends StatelessWidget {
                       case RegisterationStatus.COMPLETE:
                         final productController = Get.find<ProductController>();
                         productController.firmId.value = userModel.firmId;
-                        await productController.init();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => const ProductScreenA(),
                           ),
                         );
+                        await productController.init();
                         break;
                       case RegisterationStatus.LINK:
                         Navigator.push(
