@@ -24,7 +24,7 @@ class AuthRepository {
       Uri.parse(loginUrl),
       body: body,
     );
-      print("login ${body}");
+    print("login ${resp.body}");
     if (resp.statusCode == 200) {
       final respBody = jsonDecode(resp.body);
       if (respBody['status'] as String == '1') {

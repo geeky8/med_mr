@@ -46,12 +46,11 @@ class _LoginScreenState extends State<LoginScreen> {
               context: context,
               onPressed: () async {
                 await loginController.login(
-                  username: 'mr1',
-                  pass: 'mr1',
+                  username: usernameController.text.trim(),
+                  pass: pinController.text.trim(),
                   mrType: MRType.EXECUTIVE,
                   context: context,
                 );
-                
               },
               radius: font25Px(context: context),
               text: 'Login',
@@ -88,13 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: getScreenPercentSize(context, 10),
                       ),
-                      // AuthTextField(
-                      //   controller: typeController,
-                      //   label: 'Type',
-                      //   prefixIcon: Icons.calendar_today,
-                      //   onTap: () {},
-                      //   suffixIcon: Icons.keyboard_arrow_down,
-                      // ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: blockSizeHorizontal(context: context) * 3,

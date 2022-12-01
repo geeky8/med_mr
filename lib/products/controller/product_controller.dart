@@ -287,8 +287,11 @@ class ProductController extends GetxController {
       );
     } else {
       // cartModel = model;
-      cartModel.value =
-          cartModel.value.copyWith(productList: model.productList);
+      cartModel.value = cartModel.value.copyWith(
+        productList: model.productList,
+        // totalSalePrice: model.totalSalePrice,
+        // noOfProducts: model.noOfProducts,
+      );
       final list = <ProductModel>[];
       if (cartOpt != null) {
         for (final i in model.productList) {
@@ -614,6 +617,7 @@ class ProductController extends GetxController {
     );
 
     final currModel = model.copyWith(
+      productName: 'Product Prices have been changes please remove the product',
       cartQuantity: 0,
       subTotal: 0.00.toString(),
     );
@@ -676,8 +680,6 @@ class ProductController extends GetxController {
             // searchState = StoreState.SUCCESS;
           } else if (productRespModel.message ==
               'product not serviceable in your area !!!') {
-            // message = 'Products not servicable in your selected area!';
-            // searchState = StoreState.ERROR;
           } else {
             // message = 'Admin Status Pending';
             // searchState = StoreState.ERROR;
@@ -699,36 +701,14 @@ class ProductController extends GetxController {
     checkoutState.value = HomeState.LOADING;
 
     int payStatus = 1;
-    //----------- Payment confirmation -----------------------------
-    // if (paymentOptions == PaymentOptions.ONLINE) {
-    //   payStatus =
-    //       await _productsRepository.paymentConfirmation(orderId: orderId);
-    //   if (kDebugMode) {
-    //     print('------ payment check -------$payStatus');
-    //   }
-
-    //   if (payStatus == 1) {
-    //     // print('options ---------${paymentOptions.toPaymentOption()}');
-    //     final snackBar = ConstantWidget.customSnackBar(
-    //       text: 'Your payment has been confirmed',
-    //       context: context,
-    //     );
-    //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //   } else {
-    //     final snackBar = ConstantWidget.customSnackBar(
-    //       text:
-    //           'Failed to process the payment, we will confirm the order soon',
-    //       context: context,
-    //     );
-    //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //   }
-    // }
 
     //---------- Confirm Checkout -----------------------------
     if (payStatus == 1) {
+      debugPrint('---- total price ---------${cartModel.value.totalSalePrice}');
       final confirmValue = await ProductRepository().checkoutConfirm(
         firmId: firmId.value,
-        finalPrice: cartModel.value.totalSalePrice,
+        finalPrice:
+            double.parse(cartModel.value.totalSalePrice).toStringAsFixed(2),
       );
       if (kDebugMode) {
         print('------ confirm checkout check -------$confirmValue');
@@ -738,7 +718,11 @@ class ProductController extends GetxController {
         confirm = confirmValue;
       }
     }
+
+    /// Update the cart and all the products
     checkoutState.value = HomeState.SUCCESS;
+    getCartItems();
+    getProducts();
     return confirm;
   }
 }

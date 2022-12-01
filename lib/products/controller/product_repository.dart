@@ -270,12 +270,7 @@ class ProductRepository {
   Future<CartModel> getCart({required String firmId}) async {
     final sessId = DataStorage().readSessId();
 
-    final body = {
-      //"sessid": "c9fc796d50917bf1",
-      // "sessid": "34c4efad30e6e2d4",
-      "firm_id": firmId,
-      "sessid": sessId
-    };
+    final body = {"firm_id": firmId, "sessid": sessId};
 
     final List<ProductModel> prodList = [];
     int count = 0;
@@ -322,6 +317,8 @@ class ProductRepository {
       // "final": "2000.00",
       "final": finalPrice,
     };
+
+    debugPrint('--------- checkout body : $body');
 
     String confirm = '';
     final resp =

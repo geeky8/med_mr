@@ -32,7 +32,7 @@ class CartScreen extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 cart = pcontroller.cartModel.value;
-                if (pcontroller.homeState.value==HomeState.LOADING) {
+                if (pcontroller.homeState.value == HomeState.LOADING) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
@@ -182,7 +182,8 @@ class _CartItemTileState extends State<CartItemTile> {
                                 blockSizeHorizontal(context: context) * 3,
                           ),
                           child: CartItemButtons(
-                            maxQuantity: int.parse(widget.product.quantity),
+                            // maxQuantity: int.parse(widget.product.quantity),
+                            maxQuantity: 1,
                             itemquantity: widget.product.cartQuantity!,
                             callbackAdd: (() async {
                               await pcontroller.plusToCart(
